@@ -6,95 +6,214 @@
     <title>Portail de Candidature en Ligne</title>
     <!-- Intégration de Select2 -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --brand-blue: #009EDB;
-            --brand-dark-blue: #1C3F60;
-            --bg-color: #f4f7f9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-            --border-color: #cbd5e1;
+            --ink: #14213D;
+            --teal: #1F6F78;
+            --teal-dark: #16545B;
+            --gold: #C9A227;
+            --paper: #F7F4EC;
+            --card: #FFFFFF;
+            --slate: #5B6470;
+            --border: #DCD6C6;
+            --border-soft: #E9E4D6;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
             line-height: 1.6;
-            padding: 20px;
         }
 
-        .container {
-            max-width: 850px;
+        /* ---------- Shell layout ---------- */
+        .shell {
+            max-width: 1120px;
             margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            padding: 32px 20px 80px;
+        }
+
+        .masthead {
+            padding: 6px 4px 28px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+
+        .masthead .eyebrow {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--teal-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .masthead .eyebrow::before {
+            content: "";
+            width: 22px;
+            height: 1px;
+            background: var(--gold);
+            display: inline-block;
+        }
+
+        .masthead h1 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: clamp(1.7rem, 3vw, 2.3rem);
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+
+        .masthead .ref {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--slate);
+            margin-top: 8px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 36px;
+            align-items: start;
+        }
+
+        /* ---------- Dossier rail (signature element) ---------- */
+        .rail {
+            position: sticky;
+            top: 24px;
+            background: var(--card);
+            border: 1px solid var(--border-soft);
+            border-radius: 3px;
             overflow: hidden;
         }
 
-        .header {
-            background: linear-gradient(135deg, var(--brand-dark-blue), var(--brand-blue));
-            color: white;
-            padding: 35px 30px;
-            text-align: center;
+        .rail a {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 18px 16px 22px;
+            text-decoration: none;
+            color: var(--slate);
+            border-bottom: 1px solid var(--border-soft);
+            border-left: 3px solid transparent;
+            font-size: 0.86rem;
+            font-weight: 500;
+            transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
         }
 
-        .header h1 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            font-weight: 600;
+        .rail a:last-child {
+            border-bottom: none;
         }
 
+        .rail a .hole {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--paper);
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .rail a .num {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--gold);
+            width: 16px;
+            flex-shrink: 0;
+        }
+
+        .rail a:hover {
+            background: var(--paper);
+            color: var(--ink);
+        }
+
+        .rail a.active {
+            color: var(--teal-dark);
+            border-left-color: var(--gold);
+            background: var(--paper);
+        }
+
+        .rail a.active .hole {
+            background: var(--gold);
+            border-color: var(--gold);
+        }
+
+        /* ---------- Form card ---------- */
         form {
-            padding: 35px 40px;
+            background: var(--card);
         }
 
-        fieldset {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            background-color: #fafbfc;
+        .dossier-section {
+            background: var(--card);
+            border: 1px solid var(--border-soft);
+            border-radius: 3px;
+            padding: 28px 30px 30px;
+            margin-bottom: 22px;
+            scroll-margin-top: 24px;
         }
 
-        legend {
-            font-weight: bold;
-            color: var(--brand-dark-blue);
-            font-size: 1.1rem;
-            padding: 0 10px;
-            background-color: white;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-soft);
+        }
+
+        .section-head .tag {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            border-radius: 2px;
+            padding: 2px 7px;
+        }
+
+        .section-head h2 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--ink);
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
+        .form-row:last-child { margin-bottom: 0; }
 
-        .form-group.full-width {
-            grid-column: span 2;
-        }
+        .form-group { margin-bottom: 18px; }
+        .form-group.full-width { grid-column: span 2; }
+        .dossier-section > .form-group:last-child,
+        .form-row:last-child .form-group { margin-bottom: 0; }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 7px;
             font-weight: 600;
-            font-size: 0.9rem;
-            color: #1e293b;
+            font-size: 0.82rem;
+            color: var(--ink);
         }
 
         input[type="text"],
@@ -104,246 +223,307 @@
         select,
         input[type="file"] {
             width: 100%;
-            padding: 11px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.95rem;
+            padding: 11px 13px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 0.92rem;
+            font-family: 'Inter', sans-serif;
             background-color: #ffffff;
-            color: #334155;
+            color: var(--ink);
+        }
+
+        input[type="file"] {
+            padding: 9px 13px;
+            font-size: 0.85rem;
+            color: var(--slate);
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--brand-blue);
-            box-shadow: 0 0 0 3px rgba(0, 158, 219, 0.15);
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(31, 111, 120, 0.13);
         }
 
+        ::placeholder { color: #9aa1ab; }
+
+        /* Select2 theming to match the dossier */
         .select2-container .select2-selection--single {
-            height: 46px !important;
-            border: 1px solid var(--border-color) !important;
-            border-radius: 6px !important;
-            padding: 8px 4px;
+            height: 44px !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 3px !important;
+            padding: 6px 4px;
         }
         .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 44px !important;
+            height: 42px !important;
         }
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #334155 !important;
-            line-height: 28px !important;
+            color: var(--ink) !important;
+            line-height: 30px !important;
+            font-size: 0.92rem;
+        }
+        .select2-container--default.select2-container--focus .select2-selection--single,
+        .select2-container--default.select2-container--open .select2-selection--single {
+            border-color: var(--teal) !important;
+        }
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: var(--teal) !important;
+        }
+        .select2-dropdown {
+            border-color: var(--border) !important;
         }
 
-        .error-msg {
-            font-size: 0.85rem;
-            color: #dc2626;
-            margin-top: 5px;
+        .note {
+            font-size: 0.78rem;
+            color: var(--slate);
+            margin-top: 6px;
             display: block;
         }
 
-        .checkbox-container {
-            margin-top: 10px;
+        .submit-bar {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: #475569;
+            justify-content: space-between;
+            gap: 20px;
+            padding-top: 6px;
+        }
+
+        .submit-bar p {
+            font-size: 0.8rem;
+            color: var(--slate);
+            max-width: 320px;
         }
 
         .btn-submit {
-            background-color: var(--brand-blue);
+            background-color: var(--teal);
             color: white;
             border: none;
-            padding: 14px 28px;
-            font-size: 1rem;
+            padding: 14px 30px;
+            font-size: 0.95rem;
             font-weight: 600;
-            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            border-radius: 3px;
             cursor: pointer;
-            width: 100%;
-            transition: background-color 0.2s;
+            white-space: nowrap;
+            transition: background-color 0.15s ease;
         }
 
         .btn-submit:hover {
-            background-color: #0082b8;
+            background-color: var(--teal-dark);
         }
 
-        @media (max-width: 768px) {
-            .form-row {
+        @media (max-width: 860px) {
+            .layout {
                 grid-template-columns: 1fr;
             }
-            .form-group.full-width {
-                grid-column: span 1;
+            .rail {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                display: flex;
+                overflow-x: auto;
+                border-radius: 0;
+                margin: 0 -20px 20px;
+                border-left: none;
+                border-right: none;
             }
-            form {
-                padding: 20px;
+            .rail a {
+                border-bottom: none;
+                border-left: none;
+                border-right: 1px solid var(--border-soft);
+                border-top: 3px solid transparent;
+                flex-shrink: 0;
             }
+            .rail a.active {
+                border-left-color: transparent;
+                border-top-color: var(--gold);
+            }
+            .rail a .hole { display: none; }
+            .form-row { grid-template-columns: 1fr; }
+            .form-group.full-width { grid-column: span 1; }
+            .dossier-section { padding: 22px 18px; }
+            .submit-bar {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: left;
+            }
+            .btn-submit { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
+<div class="shell">
+    <div class="masthead">
+        <div class="eyebrow">Programme de recrutement</div>
         <h1>Portail de Candidature en Ligne</h1>
+        <div class="ref">Complétez les cinq rubriques du dossier ci-dessous. Les champs marqués * sont obligatoires.</div>
     </div>
 
-    <form action="traitement_candidature.php" method="POST" enctype="multipart/form-data">
+    <div class="layout">
+        <nav class="rail" aria-label="Sections du dossier">
+            <a href="#section-1"><span class="hole"></span><span class="num">01</span>Informations personnelles</a>
+            <a href="#section-2"><span class="hole"></span><span class="num">02</span>Localisation &amp; nationalité</a>
+            <a href="#section-3"><span class="hole"></span><span class="num">03</span>Parcours académique</a>
+            <a href="#section-4"><span class="hole"></span><span class="num">04</span>Poste souhaité</a>
+            <a href="#section-5"><span class="hole"></span><span class="num">05</span>Pièces justificatives</a>
+        </nav>
 
-        <!-- Informations Personnelles -->
-        <fieldset>
-            <legend>1. Informations Personnelles</legend>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="nom">Nom de famille *</label>
-                    <input type="text" id="nom" name="nom" required placeholder="Ex: Nkurunziza">
-                </div>
-                <div class="form-group">
-                    <label for="prenom">Prénom(s) *</label>
-                    <input type="text" id="prenom" name="prenom" required placeholder="Ex: Marie">
-                </div>
-            </div>
+        <form action="traitement_candidature.php" method="POST" enctype="multipart/form-data">
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="date_naissance">Date de naissance *</label>
-                    <input type="date" id="date_naissance" name="date_naissance" required>
+            <!-- Informations Personnelles -->
+            <section class="dossier-section" id="section-1">
+                <div class="section-head"><span class="tag">01</span><h2>Informations Personnelles</h2></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nom">Nom de famille *</label>
+                        <input type="text" id="nom" name="nom" required placeholder="Ex: Nkurunziza">
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom(s) *</label>
+                        <input type="text" id="prenom" name="prenom" required placeholder="Ex: Marie">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="genre">Genre *</label>
-                    <select id="genre" name="genre" required>
-                        <option value="">-- Sélectionnez --</option>
-                        <option value="F">Féminin</option>
-                        <option value="M">Masculin</option>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date_naissance">Date de naissance *</label>
+                        <input type="date" id="date_naissance" name="date_naissance" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="genre">Genre *</label>
+                        <select id="genre" name="genre" required>
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="F">Féminin</option>
+                            <option value="M">Masculin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Courriel (Email) *</label>
+                        <input type="email" id="email" name="email" required placeholder="exemple@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Numéro de téléphone *</label>
+                        <input type="tel" id="telephone" name="telephone" required placeholder="+257.....">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Localisation & Nationalité -->
+            <section class="dossier-section" id="section-2">
+                <div class="section-head"><span class="tag">02</span><h2>Localisation &amp; Nationalité</h2></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pays_residence">Pays de résidence actuel *</label>
+                        <select id="pays_residence" name="pays_residence" class="select2-pays" required>
+                            <option value="">-- Sélectionnez un pays --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationalite">Nationalité principale *</label>
+                        <select id="nationalite" name="nationalite" class="select2-pays" required>
+                            <option value="">-- Sélectionnez un pays --</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Parcours Académique -->
+            <section class="dossier-section" id="section-3">
+                <div class="section-head"><span class="tag">03</span><h2>Parcours Académique</h2></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="niveau_etudes">Niveau d'études *</label>
+                        <select id="niveau_etudes" name="niveau_etudes" required>
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="Licence">Licence (Bachelor)</option>
+                            <option value="Master">Master / Magistère</option>
+                            <option value="Doctorat">Doctorat (Ph.D.)</option>
+                            <option value="Autre">Autre diplôme supérieur</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="domaine_etudes">Domaine d'études / Spécialité *</label>
+                        <input type="text" id="domaine_etudes" name="domaine_etudes" required placeholder="Ex: Informatique / Génie Logiciel">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <!-- Pays de l'établissement -->
+                    <div class="form-group">
+                        <label for="pays_universite">Pays de l'établissement *</label>
+                        <select id="pays_universite" name="pays_universite" class="select2-pays" required>
+                            <option value="">-- Sélectionnez un pays --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="annee_diplome">Année d'obtention *</label>
+                        <select id="annee_diplome" name="annee_diplome" required>
+                            <option value="">-- Année --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Nom de l'Université (chargée dynamiquement selon le pays choisi) -->
+                <div class="form-group full-width">
+                    <label for="universite">Nom de l'Université Accréditée *</label>
+                    <select id="universite" name="universite" class="select2-universites" required>
+                        <option value="">-- D'abord, sélectionnez un pays d'établissement ci-dessus --</option>
                     </select>
                 </div>
-            </div>
+            </section>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="email">Courriel (Email) *</label>
-                    <input type="email" id="email" name="email" required placeholder="exemple@gmail.com">
+            <!-- Postes et Expérience -->
+            <section class="dossier-section" id="section-4">
+                <div class="section-head"><span class="tag">04</span><h2>Poste Souhaité</h2></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="categorie_poste">Catégorie de poste visé *</label>
+                        <select id="categorie_poste" name="categorie_poste" required>
+                            <option value="">-- Sélectionnez --</option>
+                            <option value="Junior">Poste Junior</option>
+                            <option value="Confirme">Poste Confirmé</option>
+                            <option value="Manager">Poste Managérial</option>
+                            <option value="Consultant">Consultant / Expert Externe</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="departement">Département visé *</label>
+                        <select id="departement" name="departement" required>
+                            <option value="">-- Sélectionnez un département --</option>
+                            <option value="RH">Ressources Humaines</option>
+                            <option value="IT">Informatique / IT</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Communication">Communication</option>
+                            <option value="Logistique">Logistique</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="telephone">Numéro de téléphone *</label>
-                    <input type="tel" id="telephone" name="telephone" required placeholder="+257.....">
-                </div>
-            </div>
-        </fieldset>
+            </section>
 
-        <!-- Localisation & Nationalité -->
-        <fieldset>
-            <legend>2. Localisation &amp; Nationalité</legend>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="pays_residence">Pays de résidence actuel *</label>
-                    <select id="pays_residence" name="pays_residence" class="select2-pays" required>
-                        <option value="">-- Sélectionnez un pays --</option>
-                    </select>
+            <!-- Pièces Justificatives -->
+            <section class="dossier-section" id="section-5">
+                <div class="section-head"><span class="tag">05</span><h2>Pièces Justificatives</h2></div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="cv">Curriculum Vitae (CV) - Format PDF *</label>
+                        <input type="file" id="cv" name="cv" accept=".pdf" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lettre_motivation">Lettre de motivation - Format PDF *</label>
+                        <input type="file" id="lettre_motivation" name="lettre_motivation" accept=".pdf" required>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nationalite">Nationalité principale *</label>
-                    <select id="nationalite" name="nationalite" class="select2-pays" required>
-                        <option value="">-- Sélectionnez un pays --</option>
-                    </select>
+                <div class="submit-bar" style="margin-top: 26px;">
+                    <p class="note">Vérifiez vos réponses avant l'envoi : le dossier ne peut plus être modifié une fois soumis.</p>
+                    <button type="submit" class="btn-submit">Soumettre la candidature</button>
                 </div>
-            </div>
-        </fieldset>
+            </section>
 
-        <!-- Parcours Académique -->
-        <fieldset>
-            <legend>3. Parcours Académique</legend>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="niveau_etudes">Niveau d'études *</label>
-                    <select id="niveau_etudes" name="niveau_etudes" required>
-                        <option value="">-- Sélectionnez --</option>
-                        <option value="Licence">Licence (Bachelor)</option>
-                        <option value="Master">Master / Magistère</option>
-                        <option value="Doctorat">Doctorat (Ph.D.)</option>
-                        <option value="Autre">Autre diplôme supérieur</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="domaine_etudes">Domaine d'études / Spécialité *</label>
-                    <input type="text" id="domaine_etudes" name="domaine_etudes" required placeholder="Ex: Informatique / Génie Logiciel">
-                </div>
-            </div>
-
-            <div class="form-row">
-                <!-- Pays de l'établissement -->
-                <div class="form-group">
-                    <label for="pays_universite">Pays de l'établissement *</label>
-                    <select id="pays_universite" name="pays_universite" class="select2-pays" required>
-                        <option value="">-- Sélectionnez un pays --</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="annee_diplome">Année d'obtention *</label>
-                    <select id="annee_diplome" name="annee_diplome" required>
-                        <option value="">-- Année --</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Nom de l'Université -->
-            <div class="form-group full-width">
-                <label for="universite">Nom de l'Université Accréditée *</label>
-                <select id="universite" name="universite" class="select2-universites" disabled required>
-                    <option value="">-- D'abord, sélectionnez un pays d'établissement ci-dessus --</option>
-                </select>
-                <span id="universityError" class="error-msg"></span>
-
-                <div class="checkbox-container">
-                    <input type="checkbox" id="manualUniToggle">
-                    <label for="manualUniToggle" style="margin:0; font-weight:normal;">Mon établissement n'apparaît pas dans la liste</label>
-                </div>
-                <input type="text" id="manualUniInput" name="universite_manuelle" placeholder="Saisissez le nom de votre établissement" style="display:none; margin-top:10px;">
-            </div>
-        </fieldset>
-
-        <!-- Postes et Expérience -->
-        <fieldset>
-            <legend>4. Poste Souhaité</legend>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="categorie_poste">Catégorie de poste visé *</label>
-                    <select id="categorie_poste" name="categorie_poste" required>
-                        <option value="">-- Sélectionnez --</option>
-                        <option value="Junior">Poste Junior</option>
-                        <option value="Confirme">Poste Confirmé</option>
-                        <option value="Manager">Poste Managérial</option>
-                        <option value="Consultant">Consultant / Expert Externe</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="departement">Département visé *</label>
-                    <select id="departement" name="departement" required>
-                        <option value="">-- Sélectionnez un département --</option>
-                        <option value="RH">Ressources Humaines</option>
-                        <option value="IT">Informatique / IT</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Communication">Communication</option>
-                        <option value="Logistique">Logistique</option>
-                    </select>
-                </div>
-            </div>
-        </fieldset>
-
-        <!-- Pièces Justificatives -->
-        <fieldset>
-            <legend>5. Pièces Justificatives</legend>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="cv">Curriculum Vitae (CV) - Format PDF *</label>
-                    <input type="file" id="cv" name="cv" accept=".pdf" required>
-                </div>
-                <div class="form-group">
-                    <label for="lettre_motivation">Lettre de motivation - Format PDF *</label>
-                    <input type="file" id="lettre_motivation" name="lettre_motivation" accept=".pdf" required>
-                </div>
-            </div>
-        </fieldset>
-
-        <button type="submit" class="btn-submit">Soumettre la candidature</button>
-    </form>
+        </form>
+    </div>
 </div>
 
 <!-- Scripts JS : jQuery & Select2 -->
@@ -352,59 +532,54 @@
 <script>
     $(document).ready(function() {
 
-        // 1) Données des Pays (Nom FR pour l'affichage, Nom EN pour correspondre au JSON Hipo)
-        const COUNTRIES = [
-            {en:"Afghanistan",fr:"Afghanistan"}, {en:"South Africa",fr:"Afrique du Sud"}, {en:"Albania",fr:"Albanie"},
-            {en:"Algeria",fr:"Algérie"}, {en:"Germany",fr:"Allemagne"}, {en:"Andorra",fr:"Andorre"}, {en:"Angola",fr:"Angola"},
-            {en:"Saudi Arabia",fr:"Arabie saoudite"}, {en:"Argentina",fr:"Argentine"}, {en:"Armenia",fr:"Arménie"},
-            {en:"Australia",fr:"Australie"}, {en:"Austria",fr:"Autriche"}, {en:"Azerbaijan",fr:"Azerbaïdjan"},
-            {en:"Belgium",fr:"Belgique"}, {en:"Benin",fr:"Bénin"}, {en:"Belarus",fr:"Biélorussie"},
-            {en:"Bolivia",fr:"Bolivie"}, {en:"Bosnia & Herzegovina",fr:"Bosnie-Herzégovine"}, {en:"Brazil",fr:"Brésil"},
-            {en:"Bulgaria",fr:"Bulgarie"}, {en:"Burkina Faso",fr:"Burkina Faso"}, {en:"Burundi",fr:"Burundi"},
-            {en:"Cambodia",fr:"Cambodge"}, {en:"Cameroon",fr:"Cameroun"}, {en:"Canada",fr:"Canada"},
-            {en:"Cape Verde",fr:"Cap-Vert"}, {en:"Chile",fr:"Chili"}, {en:"China",fr:"Chine"},
-            {en:"Colombia",fr:"Colombie"}, {en:"Congo, Republic of the",fr:"Congo-Brazzaville"}, {en:"Congo, Democratic Republic of the",fr:"Congo-Kinshasa"},
-            {en:"Korea, Republic of",fr:"Corée du Sud"}, {en:"Costa Rica",fr:"Costa Rica"}, {en:"Côte d'Ivoire",fr:"Côte d’Ivoire"},
-            {en:"Croatia",fr:"Croatie"}, {en:"Cuba",fr:"Cuba"}, {en:"Denmark",fr:"Danemark"}, {en:"Djibouti",fr:"Djibouti"},
-            {en:"Egypt",fr:"Égypte"}, {en:"United Arab Emirates",fr:"Émirats arabes unis"}, {en:"Ecuador",fr:"Équateur"},
-            {en:"Spain",fr:"Espagne"}, {en:"Estonia",fr:"Estonie"}, {en:"United States",fr:"États-Unis"},
-            {en:"Ethiopia",fr:"Éthiopie"}, {en:"Finland",fr:"Finlande"}, {en:"France",fr:"France"},
-            {en:"Gabon",fr:"Gabon"}, {en:"Georgia",fr:"Géorgie"}, {en:"Ghana",fr:"Ghana"}, {en:"Greece",fr:"Grèce"},
-            {en:"Guinea",fr:"Guinée"}, {en:"Haiti",fr:"Haïti"}, {en:"Hungary",fr:"Hongrie"}, {en:"India",fr:"Inde"},
-            {en:"Indonesia",fr:"Indonésie"}, {en:"Iraq",fr:"Irak"}, {en:"Iran, Islamic Republic of",fr:"Iran"}, {en:"Ireland",fr:"Irlande"},
-            {en:"Israel",fr:"Israël"}, {en:"Italy",fr:"Italie"}, {en:"Japan",fr:"Japon"}, {en:"Jordan",fr:"Jordanie"},
-            {en:"Kenya",fr:"Kenya"}, {en:"Lebanon",fr:"Liban"}, {en:"Madagascar",fr:"Madagascar"}, {en:"Morocco",fr:"Maroc"},
-            {en:"Mauritania",fr:"Mauritanie"}, {en:"Mexico",fr:"Mexique"}, {en:"Moldova, Republic of",fr:"Moldavie"},
-            {en:"Niger",fr:"Niger"}, {en:"Nigeria",fr:"Nigeria"}, {en:"Norway",fr:"Norvège"}, {en:"Uganda",fr:"Ouganda"},
-            {en:"Pakistan",fr:"Pakistan"}, {en:"Netherlands",fr:"Pays-Bas"}, {en:"Peru",fr:"Pérou"},
-            {en:"Poland",fr:"Pologne"}, {en:"Portugal",fr:"Portugal"}, {en:"Central African Republic",fr:"République centrafricaine"},
-            {en:"Romania",fr:"Roumanie"}, {en:"United Kingdom",fr:"Royaume-Uni"}, {en:"Russian Federation",fr:"Russie"},
-            {en:"Rwanda",fr:"Rwanda"}, {en:"Senegal",fr:"Sénégal"}, {en:"Serbia",fr:"Serbie"}, {en:"Slovakia",fr:"Slovaquie"},
-            {en:"Sudan",fr:"Soudan"}, {en:"Sweden",fr:"Suède"}, {en:"Switzerland",fr:"Suisse"}, {en:"Syrian Arab Republic",fr:"Syrie"},
-            {en:"Tanzania, United Republic of",fr:"Tanzanie"}, {en:"Chad",fr:"Tchad"}, {en:"Czech Republic",fr:"Tchéquie"}, {en:"Togo",fr:"Togo"},
-            {en:"Tunisia",fr:"Tunisie"}, {en:"Turkey",fr:"Turquie"}, {en:"Ukraine",fr:"Ukraine"}, {en:"Uruguay",fr:"Uruguay"},
-            {en:"Venezuela, Bolivarian Republic of",fr:"Venezuela"}, {en:"Viet Nam",fr:"Viêt Nam"}, {en:"Zambia",fr:"Zambie"}, {en:"Zimbabwe",fr:"Zimbabwe"}
-        ].sort((a, b) => a.fr.localeCompare(b.fr, 'fr'));
+        // Liste de secours si l'API pays est injoignable (mode dégradé)
+        const listePaysSecours = [
+            "Algeria", "Belgium", "Brazil", "Burundi", "Cameroon", "Canada",
+            "China", "Democratic Republic of the Congo", "France", "Germany",
+            "India", "Italy", "Ivory Coast", "Japan", "Kenya", "Morocco",
+            "Portugal", "Rwanda", "Senegal", "South Africa", "Spain",
+            "Switzerland", "Tanzania", "Tunisia", "United Kingdom", "United States"
+        ].sort((a, b) => a.localeCompare(b, 'fr'));
 
-        // Remplissage des Selects Pays
-        let optionsPays = '<option value="">-- Sélectionnez un pays --</option>';
-        COUNTRIES.forEach(c => {
-            optionsPays += `<option value="${c.en}">${c.fr}</option>`;
-        });
-        $('.select2-pays').html(optionsPays).select2({
-            placeholder: "-- Sélectionnez un pays --",
-            allowClear: true,
-            width: '100%'
+        function remplirSelectsPays(listePays) {
+            let optionsPays = '<option value="">-- Sélectionnez un pays --</option>';
+            listePays.forEach(pays => {
+                optionsPays += `<option value="${pays}">${pays}</option>`;
+            });
+            $('.select2-pays').html(optionsPays);
+            $('.select2-pays').select2({
+                placeholder: "-- Sélectionnez un pays --",
+                allowClear: true,
+                width: '100%'
+            });
+        }
+
+        // 1) Récupération de la liste des pays via l'API CountriesNow
+        $.ajax({
+            url: 'https://countriesnow.space/api/v0.1/countries/positions',
+            dataType: 'json',
+            success: function(json) {
+                if (json.error) throw new Error('Erreur renvoyée par l\'API');
+                let listePays = json.data
+                    .map(c => c.name)
+                    .sort((a, b) => a.localeCompare(b, 'fr'));
+                remplirSelectsPays(listePays);
+            },
+            error: function() {
+                console.warn('API CountriesNow injoignable, utilisation de la liste de secours.');
+                remplirSelectsPays(listePaysSecours);
+            }
         });
 
-        // Initialisation Select2 Universités
-        const $uniSelect = $('#universite').select2({
+        // Initialisation du select des universités
+        $('.select2-universites').select2({
             placeholder: "-- Sélectionnez d'abord un pays d'établissement --",
             allowClear: true,
             width: '100%'
         });
 
-        // 2) Chargement unique du jeu de données statique Hipo via jsDelivr CDN
+        // 2) Universités : jeu de données complet (Hipo), chargé une seule fois et mis en cache,
+        //    puis filtré côté client selon le pays choisi — pas de proxy CORS nécessaire.
         let allUniversities = null;
 
         function fetchAllUniversitiesOnce() {
@@ -420,59 +595,60 @@
             });
         }
 
-        // Filtrage côté client lors de la sélection du pays
-        $('#pays_universite').on('change', function() {
-            const countryEn = $(this).val();
-            const $errorMsg = $('#universityError');
-            $errorMsg.text('');
+        $(document).on('change', '#pays_universite', function() {
+            let paysSelectionne = $(this).val();
+            let uniSelect = $('#universite');
 
-            if (!countryEn) {
-                $uniSelect.prop('disabled', true).html('<option value="">-- D\'abord, sélectionnez un pays d\'établissement --</option>').trigger('change');
+            if (!paysSelectionne) {
+                uniSelect.html('<option value="">-- D\'abord, sélectionnez un pays d\'établissement --</option>').trigger('change');
                 return;
             }
 
-            $uniSelect.prop('disabled', false).html('<option value="">Chargement des universités...</option>').trigger('change');
+            uniSelect.html('<option value="">Chargement des universités pour ' + paysSelectionne + '...</option>').trigger('change');
 
             fetchAllUniversitiesOnce().then(function(data) {
-                const matches = data.filter(u => u.country === countryEn);
+                const matches = data.filter(u => u.country === paysSelectionne);
 
                 if (!matches.length) {
-                    $uniSelect.html('<option value="">Aucune université répertoriée pour ce pays</option>').trigger('change');
-                    $errorMsg.text("Aucun établissement n'a été trouvé. Cochez la case ci-dessous pour le saisir manuellement.");
+                    uniSelect.html('<option value="">Aucune université trouvée pour ce pays</option>').trigger('change');
                     return;
                 }
 
-                const uniqueNames = [...new Set(matches.map(u => u.name))].sort((a, b) => a.localeCompare(b, 'fr'));
+                const noms = [...new Set(matches.map(u => u.name))].sort((a, b) => a.localeCompare(b, 'fr'));
+
                 let optionsUni = '<option value="">-- Sélectionnez une université --</option>';
-                uniqueNames.forEach(name => {
-                    optionsUni += `<option value="${name}">${name}</option>`;
+                noms.forEach(nom => {
+                    optionsUni += `<option value="${nom}">${nom}</option>`;
                 });
-                $uniSelect.html(optionsUni).trigger('change');
+
+                uniSelect.html(optionsUni).trigger('change');
             }).catch(function(err) {
                 console.error(err);
-                $uniSelect.html('<option value="">Erreur de chargement</option>').trigger('change');
-                $errorMsg.text("Impossible de charger la liste globale. Cochez la case ci-dessous pour le saisir manuellement.");
+                uniSelect.html('<option value="">Erreur de chargement — réessayez plus tard</option>').trigger('change');
             });
         });
 
-        // 3) Mode de saisie manuelle de secours
-        $('#manualUniToggle').on('change', function() {
-            const useManual = $(this).is(':checked');
-            if (useManual) {
-                $('#manualUniInput').show().prop('required', true);
-                $uniSelect.prop('disabled', true).prop('required', false);
-            } else {
-                $('#manualUniInput').hide().prop('required', false);
-                $uniSelect.prop('disabled', !$('#pays_universite').val()).prop('required', true);
-            }
-        });
-
         // Génération des années d'obtention
-        let $anneeSelect = $('#annee_diplome');
+        let anneeSelect = $('#annee_diplome');
         let currentYear = new Date().getFullYear();
         for (let y = currentYear; y >= 1970; y--) {
-            $anneeSelect.append(`<option value="${y}">${y}</option>`);
+            anneeSelect.append(`<option value="${y}">${y}</option>`);
         }
+
+        // Rail : mise en évidence de la section active au défilement
+        const railLinks = document.querySelectorAll('.rail a');
+        const sections = document.querySelectorAll('.dossier-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    railLinks.forEach(a => {
+                        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+                    });
+                }
+            });
+        }, { rootMargin: '-15% 0px -70% 0px' });
+        sections.forEach(sec => observer.observe(sec));
     });
 </script>
 
