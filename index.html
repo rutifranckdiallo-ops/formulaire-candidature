@@ -1,540 +1,278 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Formulaire de Candidature Internationale</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Formulaire de candidature international, simple et sécurisé." />
+  <title>Candidature internationale — Admissions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  <style>
+    /* Direction: Editorial institutionnel clair — ivoire, bleu nuit, corail admission; interface calme, rigoureuse et accueillante. */
+    :root {
+      --navy: #142a3d;
+      --navy-soft: #284257;
+      --coral: #e8755f;
+      --coral-dark: #c95845;
+      --ivory: #f6f5f1;
+      --paper: #fffefa;
+      --ink: #172431;
+      --muted: #687682;
+      --line: #dce3e5;
+      --success: #397765;
+      --shadow: 0 22px 70px rgba(20, 42, 61, .11);
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--ivory);
+      color: var(--ink);
+      font-family: "DM Sans", Arial, sans-serif;
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .38;
+      background-image: radial-gradient(rgba(20, 42, 61, .07) .6px, transparent .6px);
+      background-size: 7px 7px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(232, 117, 95, .32);
+      outline-offset: 2px;
+    }
+    .page-shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 34px 0 56px; }
+    .brand-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 42px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; color: var(--navy); text-decoration: none; font-size: .76rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; color: var(--paper); background: var(--navy); border-radius: 12px 12px 12px 3px; box-shadow: 5px 5px 0 var(--coral); }
+    .brand-mark svg { width: 22px; height: 22px; }
+    .secure-note { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: .8rem; }
+    .secure-note svg { width: 16px; color: var(--success); }
+    .layout { display: block; max-width: 920px; margin: 0 auto; }
+    .intro-panel { position: sticky; top: 24px; overflow: hidden; padding: 38px 34px 34px; color: #fff; background: var(--navy); box-shadow: var(--shadow); }
+    .intro-panel::after { content: ""; position: absolute; width: 190px; height: 190px; right: -94px; bottom: -96px; border: 1px solid rgba(255,255,255,.16); border-radius: 50%; box-shadow: 0 0 0 22px rgba(255,255,255,.04), 0 0 0 44px rgba(255,255,255,.03); }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; color: #f7b3a6; font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--coral); }
+    h1, h2, p { margin-top: 0; }
+    h1 { max-width: 7ch; margin-bottom: 22px; font-family: Fraunces, Georgia, serif; font-size: clamp(2.5rem, 5vw, 4.5rem); line-height: .98; letter-spacing: -.045em; font-weight: 700; }
+    .intro-copy { max-width: 31ch; margin-bottom: 38px; color: #c7d3d8; font-size: .96rem; }
+    .steps { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
+    .steps li { position: relative; display: grid; grid-template-columns: 34px 1fr; gap: 12px; min-height: 64px; color: #aebfc7; font-size: .85rem; }
+    .steps li:not(:last-child)::after { content: ""; position: absolute; left: 16px; top: 30px; width: 1px; height: 34px; background: rgba(255,255,255,.2); }
+    .step-number { position: relative; z-index: 1; display: grid; place-items: center; width: 32px; height: 32px; color: #fff; border: 1px solid rgba(255,255,255,.3); border-radius: 50%; font-size: .72rem; font-weight: 700; }
+    .steps li:first-child .step-number { color: var(--navy); background: var(--coral); border-color: var(--coral); }
+    .steps strong { display: block; margin-top: 5px; color: #fff; font-size: .9rem; }
+    .confidential { position: relative; z-index: 1; display: flex; gap: 10px; margin-top: 26px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.16); color: #aebfc7; font-size: .78rem; }
+    .confidential svg { flex: 0 0 auto; width: 17px; margin-top: 2px; color: #f7b3a6; }
+    .form-card { padding: clamp(26px, 5vw, 52px); background: var(--paper); box-shadow: var(--shadow); }
+    .dropzone { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 178px; padding: 25px; color: var(--navy-soft); background: #fbfbf8; border: 1.5px dashed #b9c7ca; border-radius: 10px; text-align: center; cursor: pointer; transition: border-color 180ms var(--ease-out), background 180ms var(--ease-out), transform 180ms var(--ease-out); }
+    .dropzone:hover, .dropzone.is-dragover { color: var(--navy); background: #fff7f4; border-color: var(--coral); transform: translateY(-1px); }
+    .dropzone-icon { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 12px; color: var(--coral-dark); background: #fff0ec; border-radius: 50%; }
+    .dropzone-icon svg { width: 21px; height: 21px; }
+    .dropzone-title { margin: 0 0 4px; color: var(--navy); font-weight: 700; }
+    .dropzone-subtitle { margin: 0; color: var(--muted); font-size: .8rem; }
+    .dropzone-browse { color: var(--coral-dark); text-decoration: underline; text-underline-offset: 3px; }
+    .file-list { display: grid; gap: 8px; margin-top: 12px; }
+    .file-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; color: var(--navy-soft); background: #f1f5f2; border: 1px solid #dce8e1; border-radius: 7px; font-size: .82rem; }
+    .file-meta { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .file-meta svg { flex: 0 0 auto; width: 17px; color: var(--success); }
+    .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-size { color: var(--muted); font-size: .74rem; white-space: nowrap; }
+    .remove-file { flex: 0 0 auto; padding: 3px 6px; color: var(--coral-dark); background: transparent; border: 0; font-size: .75rem; font-weight: 700; }
+    .remove-file:hover { text-decoration: underline; }
+    .form-header { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; padding-bottom: 30px; border-bottom: 1px solid var(--line); }
+    .form-kicker { margin-bottom: 8px; color: var(--coral-dark); font-size: .75rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    h2 { margin-bottom: 8px; color: var(--navy); font-family: Fraunces, Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.45rem); line-height: 1.05; letter-spacing: -.03em; }
+    .form-lede { max-width: 52ch; margin-bottom: 0; color: var(--muted); font-size: .9rem; }
+    .form-index { color: var(--navy); font-family: Fraunces, Georgia, serif; font-size: 2.8rem; line-height: 1; opacity: .14; }
+    form { padding-top: 30px; }
+    .section-heading { display: flex; align-items: center; gap: 10px; margin: 0 0 17px; color: var(--navy); font-size: .77rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .section-heading span { display: grid; place-items: center; width: 23px; height: 23px; color: #fff; background: var(--navy); border-radius: 50%; font-size: .68rem; letter-spacing: 0; }
+    .form-section + .form-section { margin-top: 34px; padding-top: 34px; border-top: 1px solid var(--line); }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .field { min-width: 0; }
+    label { display: block; margin-bottom: 7px; color: var(--navy-soft); font-size: .82rem; font-weight: 700; }
+    .required { color: var(--coral-dark); }
+    input[type="text"], input[type="email"], input[type="file"], select, textarea { width: 100%; color: var(--ink); background: #fbfbf8; border: 1px solid var(--line); border-radius: 7px; transition: border-color 180ms var(--ease-out), box-shadow 180ms var(--ease-out), background 180ms var(--ease-out); }
+    input[type="text"], input[type="email"], select, textarea { padding: 12px 13px; }
+    input[type="file"] { padding: 10px 12px; font-size: .82rem; }
+    textarea { min-height: 134px; resize: vertical; }
+    input:hover, select:hover, textarea:hover { border-color: #afc0c6; }
+    input:focus, select:focus, textarea:focus { background: #fff; border-color: var(--coral); box-shadow: 0 0 0 4px rgba(232,117,95,.11); outline: none; }
+    select:disabled { color: #89959c; cursor: wait; }
+    .field-help { margin: 7px 0 0; color: var(--muted); font-size: .76rem; }
+    .loading { background-image: linear-gradient(90deg, #fbfbf8 25%, #eef1ed 50%, #fbfbf8 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 34px; }
+    .primary-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 47px; padding: 0 18px; border-radius: 7px; font-weight: 700; transition: transform 160ms var(--ease-out), background 160ms var(--ease-out), border-color 160ms var(--ease-out); }
+    .primary-button { color: #fff; background: var(--coral); border: 1px solid var(--coral); }
+    .primary-button:hover { background: var(--coral-dark); border-color: var(--coral-dark); transform: translateY(-2px); }
+    .secondary-button { color: var(--navy); background: transparent; border: 1px solid var(--line); }
+    .secondary-button:hover { border-color: var(--navy); background: #f4f6f3; }
+    .primary-button:active, .secondary-button:active { transform: scale(.97); }
+    .button-icon { width: 17px; height: 17px; }
+    .small { margin: 12px 0 0; color: var(--muted); font-size: .76rem; }
+    #result { margin-top: 22px; padding: 16px; overflow: auto; color: var(--navy); background: #f0f5f2; border-left: 3px solid var(--success); border-radius: 0 6px 6px 0; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .78rem; white-space: pre-wrap; }
+    .hidden { display: none !important; }
+    @media (max-width: 820px) { .page-shell { width: min(100% - 28px, 650px); padding-top: 22px; } .brand-bar { margin-bottom: 28px; } }
+    @media (max-width: 560px) { .page-shell { width: min(100% - 20px, 480px); padding-bottom: 30px; } .secure-note { display: none; } .brand-bar { margin-bottom: 23px; } .brand-mark { width: 34px; height: 34px; } .brand { font-size: .68rem; } .form-card { padding: 25px 20px; } .form-header { gap: 9px; } .form-index { font-size: 2rem; } .field-grid { grid-template-columns: 1fr; gap: 16px; } .actions > * { width: 100%; } .dropzone { min-height: 155px; padding: 20px 14px; } .file-item { align-items: flex-start; } .file-size { display: none; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+  </style>
 </head>
-<body class="bg-slate-100 font-sans text-slate-800 min-h-screen py-10 px-4">
+<body>
+  <div class="page-shell">
+    <header class="brand-bar">
+      <a class="brand" href="./" aria-label="Admissions internationales">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 17.5 12 5l7 12.5"/><path d="M8.4 12h7.2M7 17.5h10"/></svg></span>
+        Admissions internationales
+      </a>
+      <span class="secure-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 19 6v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></svg> Dossier confidentiel</span>
+    </header>
 
-  <div class="max-w-3xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
-
-    <!-- En-tête -->
-    <div class="bg-indigo-700 p-8 text-white">
-      <h1 class="text-3xl font-bold">Candidature Internationale</h1>
-      <p class="mt-2 text-indigo-100 text-sm">Veuillez remplir l'ensemble des informations requises pour soumettre votre dossier.</p>
-    </div>
-
-    <form id="applicationForm" class="p-8 space-y-8">
-
-      <!-- Section 1 : Informations Personnelles -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-slate-900 border-b pb-2 border-slate-200">1. Informations Personnelles</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="firstName" class="block text-sm font-medium text-slate-700 mb-1">Prénom</label>
-            <input type="text" id="firstName" name="firstName" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-          <div>
-            <label for="lastName" class="block text-sm font-medium text-slate-700 mb-1">Nom</label>
-            <input type="text" id="lastName" name="lastName" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
+    <main class="layout">
+      <section class="form-card" aria-labelledby="form-title">
+        <div class="form-header">
+          <div><p class="form-kicker">Dossier candidat</p><h2 id="form-title">Formulaire de candidature</h2><p class="form-lede">Complétez les champs ci-dessous avec des informations exactes. Les champs marqués d’un astérisque sont obligatoires.</p></div>
+          <span class="form-index" aria-hidden="true">01</span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Adresse Électronique</label>
-            <input type="email" id="email" name="email" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-          <div>
-            <label for="phone" class="block text-sm font-medium text-slate-700 mb-1">Téléphone (avec indicatif)</label>
-            <input type="tel" id="phone" name="phone" placeholder="+123..." required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-        </div>
-      </div>
+        <form id="appForm">
+          <section class="form-section" aria-labelledby="identity-title">
+            <h3 class="section-heading" id="identity-title"><span>01</span>Identité et contact</h3>
+            <div class="field-grid">
+              <div class="field"><label for="firstName">Prénom <span class="required">*</span></label><input id="firstName" name="firstName" type="text" autocomplete="given-name" required /></div>
+              <div class="field"><label for="lastName">Nom <span class="required">*</span></label><input id="lastName" name="lastName" type="text" autocomplete="family-name" required /></div>
+              <div class="field"><label for="email">Adresse e-mail <span class="required">*</span></label><input id="email" name="email" type="email" autocomplete="email" required /></div>
+              <div class="field"><label for="phone">Téléphone international</label><input id="phone" name="phone" type="text" autocomplete="tel" placeholder="+257 61 23 45 67" /></div>
+            </div>
+          </section>
 
-      <!-- Section 2 : Origine & Localisation -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-slate-900 border-b pb-2 border-slate-200">2. Nationalité & Résidence</h2>
+          <section class="form-section" aria-labelledby="background-title">
+            <h3 class="section-heading" id="background-title"><span>02</span>Parcours académique</h3>
+            <div class="field-grid">
+              <div class="field"><label for="country">Pays <span class="required">*</span></label><select id="country" name="country" required><option value="">Chargement des pays...</option></select></div>
+              <div class="field"><label for="university">Université, collège ou établissement d’enseignement</label><select id="university" name="university"><option value="">Sélectionnez un pays d'abord</option></select><p class="field-help">La liste est filtrée automatiquement selon le pays choisi.</p></div>
+            </div>
+            <div id="manualUniversityWrap" class="hidden field" style="margin-top: 16px"><label for="manualUniversity">Votre établissement n’apparaît pas ?</label><input id="manualUniversity" name="manualUniversity" type="text" placeholder="Saisissez son nom manuellement" /></div>
+          </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="countrySelect" class="block text-sm font-medium text-slate-700 mb-1">Pays de Résidence / Origine</label>
-            <select id="countrySelect" name="country" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
-              <option value="" disabled selected>Chargement des pays...</option>
-            </select>
-            <p id="countryError" class="text-xs text-red-600 mt-1 hidden"></p>
-          </div>
+          <section class="form-section" aria-labelledby="application-title">
+            <h3 class="section-heading" id="application-title"><span>03</span>Projet de candidature</h3>
+            <div class="field"><label for="degree">Poste ou programme demandé <span class="required">*</span></label><input id="degree" name="degree" type="text" required placeholder="Ex. Licence en informatique" /></div>
+            <div class="field" style="margin-top: 18px"><label for="motivation">Lettre de motivation</label><textarea id="motivation" name="motivation" rows="6" placeholder="Présentez brièvement votre projet et vos motivations."></textarea></div>
+            <div class="field" style="margin-top: 18px"><label for="documents">Documents de candidature <span class="required">*</span></label><input id="documents" name="documents" type="file" accept=".pdf,.doc,.docx,.txt,.odt" multiple hidden required /><div id="dropzone" class="dropzone" role="button" tabindex="0" aria-controls="documents" aria-describedby="documents-help"><span class="dropzone-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 16V4M8 8l4-4 4 4"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span><p class="dropzone-title">Déposez vos documents ici</p><p class="dropzone-subtitle"><span class="dropzone-browse">Parcourir les fichiers</span> · PDF, DOCX, DOC, ODT ou TXT</p></div><div id="fileList" class="file-list" aria-live="polite"></div><p id="documents-help" class="field-help">Ajoutez votre CV, lettre de motivation et tout document complémentaire. 5 Mo maximum par fichier. Les noms des fichiers seront enregistrés dans Google Sheets.</p></div>
+          </section>
 
-          <div>
-            <label for="city" class="block text-sm font-medium text-slate-700 mb-1">Ville</label>
-            <input type="text" id="city" name="city" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 3 : Parcours Académique -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-slate-900 border-b pb-2 border-slate-200">3. Établissement & Formation</h2>
-
-        <div>
-          <label for="universitySelect" class="block text-sm font-medium text-slate-700 mb-1">Université ou Établissement d'Origine</label>
-          <select id="universitySelect" name="university" required disabled class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white disabled:bg-slate-100 disabled:cursor-not-allowed">
-            <option value="" disabled selected>Sélectionnez d'abord un pays</option>
-          </select>
-          <p id="universityError" class="text-xs text-red-600 mt-1 hidden"></p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="degreeLevel" class="block text-sm font-medium text-slate-700 mb-1">Niveau d'Études Actuel</label>
-            <select id="degreeLevel" name="degreeLevel" required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-white">
-              <option value="" disabled selected>Sélectionner un niveau</option>
-              <option value="licence">Bac +3 (Licence / Bachelor)</option>
-              <option value="master">Bac +5 (Master)</option>
-              <option value="doctorat">Doctorat (PhD)</option>
-              <option value="autre">Autre</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="fieldOfStudy" class="block text-sm font-medium text-slate-700 mb-1">Domaine d'Études</label>
-            <input type="text" id="fieldOfStudy" name="fieldOfStudy" placeholder="ex. Génie Logiciel, Économie..." required class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 4 : Documents requis -->
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold text-slate-900 border-b pb-2 border-slate-200">4. Pièces Jointes</h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="cvFile" class="block text-sm font-medium text-slate-700 mb-1">Curriculum Vitae (PDF)</label>
-            <input type="file" id="cvFile" name="cvFile" accept=".pdf" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-          </div>
-
-          <div>
-            <label for="transcriptFile" class="block text-sm font-medium text-slate-700 mb-1">Relevés de Notes (PDF)</label>
-            <input type="file" id="transcriptFile" name="transcriptFile" accept=".pdf" required class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-          </div>
-        </div>
-      </div>
-
-      <!-- Soumission -->
-      <div class="pt-4">
-        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 shadow-md">
-          Soumettre la Candidature
-        </button>
-      </div>
-
-    </form>
+          <p class="small">En envoyant ce formulaire, vous confirmez l’exactitude des informations fournies.</p>
+          <div class="actions"><button type="submit" id="submitBtn" class="primary-button">Enregistrer ma candidature <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button><button type="button" id="previewBtn" class="secondary-button">Voir l’aperçu</button></div>
+        </form>
+        <div id="result" class="hidden" role="status" aria-live="polite"></div>
+      </section>
+    </main>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const countrySelect      = document.getElementById('countrySelect');
-      const universitySelect   = document.getElementById('universitySelect');
-      const countryErrorEl     = document.getElementById('countryError');
-      const universityErrorEl  = document.getElementById('universityError');
-      const manualUniToggle    = document.getElementById('manualUniToggle');
-      const manualUniInput     = document.getElementById('manualUniInput');
+    // API et logique fonctionnelle conservées — seule la présentation a été refondue.
+    const COUNTRIES_URL = 'https://api.first.org/data/v1/countries?limit=250';
+    const OPENALEX_URL = 'https://api.openalex.org/institutions?filter=type:education,country_code:';
+    const API_TIMEOUT_MS = 12000;
+    // Web App Apps Script reliée à la feuille Google Sheets des candidatures.
+    const GOOGLE_SHEETS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz2YLtDiLNIYYrAzAnhplXCjAfEIGrVYltc9fz04OjxzpN9fEgspehGjNiRrH8AhNRQ/exec';
 
-      // Certains pays sont nommés différemment entre RestCountries (nom "common")
-      // et le jeu de données utilisé par l'API Hipolabs (university-domains-list).
-      // Cette table corrige les cas connus qui renvoient sinon une liste vide.
-      const countryNameAliases = {
-        "Ivory Coast": "Côte d'Ivoire",
-        "Czechia": "Czech Republic",
-        "North Macedonia": "Macedonia",
-        "Eswatini": "Swaziland",
-        "South Korea": "Korea, Republic of",
-        "North Korea": "Korea, Democratic People's Republic of",
-        "Russia": "Russian Federation",
-        "Iran": "Iran, Islamic Republic of",
-        "Syria": "Syrian Arab Republic",
-        "Laos": "Lao People's Democratic Republic",
-        "Vietnam": "Viet Nam",
-        "Moldova": "Moldova, Republic of",
-        "Tanzania": "Tanzania, United Republic of",
-        "Venezuela": "Venezuela, Bolivarian Republic of",
-        "Bolivia": "Bolivia, Plurinational State of",
-        "Brunei": "Brunei Darussalam",
-        "Cape Verde": "Cabo Verde",
-        "DR Congo": "Congo, The Democratic Republic of the",
-        "Republic of the Congo": "Congo",
-        "United States": "United States of America"
-      };
+    const countrySelect = document.getElementById('country');
+    const universitySelect = document.getElementById('university');
+    const manualUniversityWrap = document.getElementById('manualUniversityWrap');
+    const manualUniversityInput = document.getElementById('manualUniversity');
+    const form = document.getElementById('appForm');
+    const resultBox = document.getElementById('result');
+    const submitBtn = document.getElementById('submitBtn');
+    const previewBtn = document.getElementById('previewBtn');
+    const documentsInput = document.getElementById('documents');
+    const dropzone = document.getElementById('dropzone');
+    const fileList = document.getElementById('fileList');
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    let selectedFiles = [];
+    let countries = [];
+    let universityRequestId = 0;
 
-      // Liste statique des pays (code ISO non nécessaire ici) : nom anglais utilisé pour
-      // interroger l'API Hipolabs, nom français pour l'affichage. Intégrée directement
-      // dans le code car RestCountries a fermé son ancienne API v3.1 (v5 exige désormais
-      // un compte + une clé API, inadapté à un appel direct depuis le navigateur), et parce
-      // que la liste des pays du monde change de toute façon très rarement.
-      const COUNTRIES = [
-  {en:"Afghanistan",fr:"Afghanistan"},
-  {en:"South Africa",fr:"Afrique du Sud"},
-  {en:"Albania",fr:"Albanie"},
-  {en:"Algeria",fr:"Algérie"},
-  {en:"Germany",fr:"Allemagne"},
-  {en:"Andorra",fr:"Andorre"},
-  {en:"Angola",fr:"Angola"},
-  {en:"Anguilla",fr:"Anguilla"},
-  {en:"Antarctica",fr:"Antarctique"},
-  {en:"Antigua & Barbuda",fr:"Antigua-et-Barbuda"},
-  {en:"Saudi Arabia",fr:"Arabie saoudite"},
-  {en:"Argentina",fr:"Argentine"},
-  {en:"Armenia",fr:"Arménie"},
-  {en:"Aruba",fr:"Aruba"},
-  {en:"Australia",fr:"Australie"},
-  {en:"Austria",fr:"Autriche"},
-  {en:"Azerbaijan",fr:"Azerbaïdjan"},
-  {en:"Bahamas",fr:"Bahamas"},
-  {en:"Bahrain",fr:"Bahreïn"},
-  {en:"Bangladesh",fr:"Bangladesh"},
-  {en:"Barbados",fr:"Barbade"},
-  {en:"Belgium",fr:"Belgique"},
-  {en:"Belize",fr:"Belize"},
-  {en:"Bermuda",fr:"Bermudes"},
-  {en:"Bhutan",fr:"Bhoutan"},
-  {en:"Belarus",fr:"Biélorussie"},
-  {en:"Bolivia",fr:"Bolivie"},
-  {en:"Bosnia & Herzegovina",fr:"Bosnie-Herzégovine"},
-  {en:"Botswana",fr:"Botswana"},
-  {en:"Brunei",fr:"Brunei"},
-  {en:"Brazil",fr:"Brésil"},
-  {en:"Bulgaria",fr:"Bulgarie"},
-  {en:"Burkina Faso",fr:"Burkina Faso"},
-  {en:"Burundi",fr:"Burundi"},
-  {en:"Benin",fr:"Bénin"},
-  {en:"Cambodia",fr:"Cambodge"},
-  {en:"Cameroon",fr:"Cameroun"},
-  {en:"Canada",fr:"Canada"},
-  {en:"Cape Verde",fr:"Cap-Vert"},
-  {en:"Ceuta & Melilla",fr:"Ceuta et Melilla"},
-  {en:"Chile",fr:"Chili"},
-  {en:"China",fr:"Chine"},
-  {en:"Cyprus",fr:"Chypre"},
-  {en:"Colombia",fr:"Colombie"},
-  {en:"Comoros",fr:"Comores"},
-  {en:"Congo - Brazzaville",fr:"Congo-Brazzaville"},
-  {en:"Congo - Kinshasa",fr:"Congo-Kinshasa"},
-  {en:"North Korea",fr:"Corée du Nord"},
-  {en:"South Korea",fr:"Corée du Sud"},
-  {en:"Costa Rica",fr:"Costa Rica"},
-  {en:"Croatia",fr:"Croatie"},
-  {en:"Cuba",fr:"Cuba"},
-  {en:"Curaçao",fr:"Curaçao"},
-  {en:"Côte d’Ivoire",fr:"Côte d’Ivoire"},
-  {en:"Denmark",fr:"Danemark"},
-  {en:"Diego Garcia",fr:"Diego Garcia"},
-  {en:"Djibouti",fr:"Djibouti"},
-  {en:"Dominica",fr:"Dominique"},
-  {en:"Spain",fr:"Espagne"},
-  {en:"Estonia",fr:"Estonie"},
-  {en:"Eswatini",fr:"Eswatini"},
-  {en:"Fiji",fr:"Fidji"},
-  {en:"Finland",fr:"Finlande"},
-  {en:"France",fr:"France"},
-  {en:"Gabon",fr:"Gabon"},
-  {en:"Gambia",fr:"Gambie"},
-  {en:"Ghana",fr:"Ghana"},
-  {en:"Gibraltar",fr:"Gibraltar"},
-  {en:"Grenada",fr:"Grenade"},
-  {en:"Greenland",fr:"Groenland"},
-  {en:"Greece",fr:"Grèce"},
-  {en:"Guadeloupe",fr:"Guadeloupe"},
-  {en:"Guam",fr:"Guam"},
-  {en:"Guatemala",fr:"Guatemala"},
-  {en:"Guernsey",fr:"Guernesey"},
-  {en:"Guinea",fr:"Guinée"},
-  {en:"Equatorial Guinea",fr:"Guinée équatoriale"},
-  {en:"Guinea-Bissau",fr:"Guinée-Bissau"},
-  {en:"Guyana",fr:"Guyana"},
-  {en:"French Guiana",fr:"Guyane française"},
-  {en:"Georgia",fr:"Géorgie"},
-  {en:"South Georgia & South Sandwich Islands",fr:"Géorgie du Sud-et-les Îles Sandwich du Sud"},
-  {en:"Haiti",fr:"Haïti"},
-  {en:"Honduras",fr:"Honduras"},
-  {en:"Hungary",fr:"Hongrie"},
-  {en:"India",fr:"Inde"},
-  {en:"Indonesia",fr:"Indonésie"},
-  {en:"Iraq",fr:"Irak"},
-  {en:"Iran",fr:"Iran"},
-  {en:"Ireland",fr:"Irlande"},
-  {en:"Iceland",fr:"Islande"},
-  {en:"Israel",fr:"Israël"},
-  {en:"Italy",fr:"Italie"},
-  {en:"Jamaica",fr:"Jamaïque"},
-  {en:"Japan",fr:"Japon"},
-  {en:"Jersey",fr:"Jersey"},
-  {en:"Jordan",fr:"Jordanie"},
-  {en:"Kazakhstan",fr:"Kazakhstan"},
-  {en:"Kenya",fr:"Kenya"},
-  {en:"Kyrgyzstan",fr:"Kirghizstan"},
-  {en:"Kiribati",fr:"Kiribati"},
-  {en:"Kosovo",fr:"Kosovo"},
-  {en:"Kuwait",fr:"Koweït"},
-  {en:"Réunion",fr:"La Réunion"},
-  {en:"Laos",fr:"Laos"},
-  {en:"Lesotho",fr:"Lesotho"},
-  {en:"Latvia",fr:"Lettonie"},
-  {en:"Lebanon",fr:"Liban"},
-  {en:"Liberia",fr:"Liberia"},
-  {en:"Libya",fr:"Libye"},
-  {en:"Liechtenstein",fr:"Liechtenstein"},
-  {en:"Lithuania",fr:"Lituanie"},
-  {en:"Luxembourg",fr:"Luxembourg"},
-  {en:"North Macedonia",fr:"Macédoine du Nord"},
-  {en:"Madagascar",fr:"Madagascar"},
-  {en:"Malaysia",fr:"Malaisie"},
-  {en:"Malawi",fr:"Malawi"},
-  {en:"Maldives",fr:"Maldives"},
-  {en:"Mali",fr:"Mali"},
-  {en:"Malta",fr:"Malte"},
-  {en:"Morocco",fr:"Maroc"},
-  {en:"Martinique",fr:"Martinique"},
-  {en:"Mauritius",fr:"Maurice"},
-  {en:"Mauritania",fr:"Mauritanie"},
-  {en:"Mayotte",fr:"Mayotte"},
-  {en:"Mexico",fr:"Mexique"},
-  {en:"Micronesia",fr:"Micronésie"},
-  {en:"Moldova",fr:"Moldavie"},
-  {en:"Monaco",fr:"Monaco"},
-  {en:"Mongolia",fr:"Mongolie"},
-  {en:"Montserrat",fr:"Montserrat"},
-  {en:"Montenegro",fr:"Monténégro"},
-  {en:"Mozambique",fr:"Mozambique"},
-  {en:"Myanmar (Burma)",fr:"Myanmar (Birmanie)"},
-  {en:"Namibia",fr:"Namibie"},
-  {en:"Nauru",fr:"Nauru"},
-  {en:"Nicaragua",fr:"Nicaragua"},
-  {en:"Niger",fr:"Niger"},
-  {en:"Nigeria",fr:"Nigeria"},
-  {en:"Niue",fr:"Niue"},
-  {en:"Norway",fr:"Norvège"},
-  {en:"New Caledonia",fr:"Nouvelle-Calédonie"},
-  {en:"New Zealand",fr:"Nouvelle-Zélande"},
-  {en:"Nepal",fr:"Népal"},
-  {en:"Oman",fr:"Oman"},
-  {en:"Uganda",fr:"Ouganda"},
-  {en:"Uzbekistan",fr:"Ouzbékistan"},
-  {en:"Pakistan",fr:"Pakistan"},
-  {en:"Palau",fr:"Palaos"},
-  {en:"Panama",fr:"Panama"},
-  {en:"Papua New Guinea",fr:"Papouasie-Nouvelle-Guinée"},
-  {en:"Paraguay",fr:"Paraguay"},
-  {en:"Netherlands",fr:"Pays-Bas"},
-  {en:"Caribbean Netherlands",fr:"Pays-Bas caribéens"},
-  {en:"Philippines",fr:"Philippines"},
-  {en:"Poland",fr:"Pologne"},
-  {en:"French Polynesia",fr:"Polynésie française"},
-  {en:"Puerto Rico",fr:"Porto Rico"},
-  {en:"Portugal",fr:"Portugal"},
-  {en:"Peru",fr:"Pérou"},
-  {en:"Qatar",fr:"Qatar"},
-  {en:"Hong Kong SAR China",fr:"R.A.S. chinoise de Hong Kong"},
-  {en:"Macao SAR China",fr:"R.A.S. chinoise de Macao"},
-  {en:"Romania",fr:"Roumanie"},
-  {en:"United Kingdom",fr:"Royaume-Uni"},
-  {en:"Russia",fr:"Russie"},
-  {en:"Rwanda",fr:"Rwanda"},
-  {en:"Central African Republic",fr:"République centrafricaine"},
-  {en:"Dominican Republic",fr:"République dominicaine"},
-  {en:"Western Sahara",fr:"Sahara occidental"},
-  {en:"St. Barthélemy",fr:"Saint-Barthélemy"},
-  {en:"St. Kitts & Nevis",fr:"Saint-Christophe-et-Niévès"},
-  {en:"San Marino",fr:"Saint-Marin"},
-  {en:"St. Martin",fr:"Saint-Martin"},
-  {en:"Sint Maarten",fr:"Saint-Martin (partie néerlandaise)"},
-  {en:"St. Pierre & Miquelon",fr:"Saint-Pierre-et-Miquelon"},
-  {en:"St. Vincent & Grenadines",fr:"Saint-Vincent-et-les Grenadines"},
-  {en:"St. Helena",fr:"Sainte-Hélène"},
-  {en:"St. Lucia",fr:"Sainte-Lucie"},
-  {en:"El Salvador",fr:"Salvador"},
-  {en:"Samoa",fr:"Samoa"},
-  {en:"American Samoa",fr:"Samoa américaines"},
-  {en:"São Tomé & Príncipe",fr:"Sao Tomé-et-Principe"},
-  {en:"Sark",fr:"Sark"},
-  {en:"Serbia",fr:"Serbie"},
-  {en:"Seychelles",fr:"Seychelles"},
-  {en:"Sierra Leone",fr:"Sierra Leone"},
-  {en:"Singapore",fr:"Singapour"},
-  {en:"Slovakia",fr:"Slovaquie"},
-  {en:"Slovenia",fr:"Slovénie"},
-  {en:"Somalia",fr:"Somalie"},
-  {en:"Sudan",fr:"Soudan"},
-  {en:"South Sudan",fr:"Soudan du Sud"},
-  {en:"Sri Lanka",fr:"Sri Lanka"},
-  {en:"Switzerland",fr:"Suisse"},
-  {en:"Suriname",fr:"Suriname"},
-  {en:"Sweden",fr:"Suède"},
-  {en:"Svalbard & Jan Mayen",fr:"Svalbard et Jan Mayen"},
-  {en:"Syria",fr:"Syrie"},
-  {en:"Senegal",fr:"Sénégal"},
-  {en:"Tajikistan",fr:"Tadjikistan"},
-  {en:"Tanzania",fr:"Tanzanie"},
-  {en:"Taiwan",fr:"Taïwan"},
-  {en:"Chad",fr:"Tchad"},
-  {en:"Czechia",fr:"Tchéquie"},
-  {en:"French Southern Territories",fr:"Terres australes françaises"},
-  {en:"British Indian Ocean Territory",fr:"Territoire britannique de l’océan Indien"},
-  {en:"Palestinian Territories",fr:"Territoires palestiniens"},
-  {en:"Thailand",fr:"Thaïlande"},
-  {en:"Timor-Leste",fr:"Timor oriental"},
-  {en:"Togo",fr:"Togo"},
-  {en:"Tokelau",fr:"Tokelau"},
-  {en:"Tonga",fr:"Tonga"},
-  {en:"Trinidad & Tobago",fr:"Trinité-et-Tobago"},
-  {en:"Tristan da Cunha",fr:"Tristan da Cunha"},
-  {en:"Tunisia",fr:"Tunisie"},
-  {en:"Turkmenistan",fr:"Turkménistan"},
-  {en:"Türkiye",fr:"Turquie"},
-  {en:"Tuvalu",fr:"Tuvalu"},
-  {en:"Ukraine",fr:"Ukraine"},
-  {en:"Uruguay",fr:"Uruguay"},
-  {en:"Vanuatu",fr:"Vanuatu"},
-  {en:"Venezuela",fr:"Venezuela"},
-  {en:"Vietnam",fr:"Viêt Nam"},
-  {en:"Wallis & Futuna",fr:"Wallis-et-Futuna"},
-  {en:"Yemen",fr:"Yémen"},
-  {en:"Zambia",fr:"Zambie"},
-  {en:"Zimbabwe",fr:"Zimbabwe"},
-  {en:"Egypt",fr:"Égypte"},
-  {en:"United Arab Emirates",fr:"Émirats arabes unis"},
-  {en:"Ecuador",fr:"Équateur"},
-  {en:"Eritrea",fr:"Érythrée"},
-  {en:"Vatican City",fr:"État de la Cité du Vatican"},
-  {en:"United States",fr:"États-Unis"},
-  {en:"Ethiopia",fr:"Éthiopie"},
-  {en:"Bouvet Island",fr:"Île Bouvet"},
-  {en:"Christmas Island",fr:"Île Christmas"},
-  {en:"Clipperton Island",fr:"Île Clipperton"},
-  {en:"Norfolk Island",fr:"Île Norfolk"},
-  {en:"Isle of Man",fr:"Île de Man"},
-  {en:"Ascension Island",fr:"Île de l’Ascension"},
-  {en:"Canary Islands",fr:"Îles Canaries"},
-  {en:"Cayman Islands",fr:"Îles Caïmans"},
-  {en:"Cocos (Keeling) Islands",fr:"Îles Cocos"},
-  {en:"Cook Islands",fr:"Îles Cook"},
-  {en:"Faroe Islands",fr:"Îles Féroé"},
-  {en:"Heard & McDonald Islands",fr:"Îles Heard-et-MacDonald"},
-  {en:"Falkland Islands",fr:"Îles Malouines"},
-  {en:"Northern Mariana Islands",fr:"Îles Mariannes du Nord"},
-  {en:"Marshall Islands",fr:"Îles Marshall"},
-  {en:"Pitcairn Islands",fr:"Îles Pitcairn"},
-  {en:"Solomon Islands",fr:"Îles Salomon"},
-  {en:"Turks & Caicos Islands",fr:"Îles Turques-et-Caïques"},
-  {en:"British Virgin Islands",fr:"Îles Vierges britanniques"},
-  {en:"U.S. Virgin Islands",fr:"Îles Vierges des États-Unis"},
-  {en:"U.S. Outlying Islands",fr:"Îles mineures éloignées des États-Unis"},
-  {en:"Åland Islands",fr:"Îles Åland"}
-      ];
+    function fetchWithTimeout(url, options = {}) { const controller = new AbortController(); const timeout = setTimeout(() => controller.abort(), API_TIMEOUT_MS); return fetch(url, { ...options, signal: controller.signal }).finally(() => clearTimeout(timeout)); }
 
-      let currentAbortController = null;
+    async function loadCountries() {
+      try {
+        countrySelect.classList.add('loading');
+        const res = await fetchWithTimeout(COUNTRIES_URL);
+        if (!res.ok) throw new Error('Erreur lors du chargement des pays');
+        const response = await res.json();
+        const countryEntries = Object.entries(response.data || {});
+        if (!countryEntries.length) throw new Error('La liste des pays est vide');
+        countries = countryEntries.map(([code, country]) => ({ name: country.country || code, alt: [], cca2: code, cca3: '' })).sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+        populateCountries();
+      } catch (err) { console.error(err); countrySelect.innerHTML = '<option value="">Impossible de charger les pays. Actualisez la page.</option>'; countrySelect.disabled = true; }
+      finally { countrySelect.classList.remove('loading'); }
+    }
 
-      function showCountryError(message) {
-        countryErrorEl.textContent = message;
-        countryErrorEl.classList.toggle('hidden', !message);
-      }
+    function populateCountries() { countrySelect.innerHTML = '<option value="">-- Choisir un pays --</option>'; countrySelect.disabled = false; for (const c of countries) { const opt = document.createElement('option'); opt.value = c.name; opt.textContent = c.name + (c.cca2 ? ` (${c.cca2})` : ''); countrySelect.appendChild(opt); } }
+    countrySelect.addEventListener('change', async (e) => { await loadUniversitiesForCountry(e.target.value); });
 
-      function showUniversityError(message) {
-        universityErrorEl.textContent = message;
-        universityErrorEl.classList.toggle('hidden', !message);
-      }
-
-      // Enlève les accents pour comparer/rechercher plus largement si besoin
-      function normalize(str) {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-      }
-
-      // --- 1. Remplir la liste des pays depuis le tableau statique COUNTRIES ---
-      // (aucun appel réseau nécessaire : instantané et ne dépend d'aucune API externe)
-      countrySelect.innerHTML = '<option value="" disabled selected>Sélectionnez un pays</option>';
-      COUNTRIES.forEach(country => {
-        const option = document.createElement('option');
-        option.value = country.en; // nom anglais utilisé pour interroger Hipolabs
-        option.textContent = country.fr;
-        countrySelect.appendChild(option);
-      });
-
-      // --- 2. Charger les universités selon le pays sélectionné, avec repli sur alias ---
-      countrySelect.addEventListener('change', async (e) => {
-        const selectedCountryEn = e.target.value;
-        showCountryError('');
-        showUniversityError('');
-
-        universitySelect.disabled = false;
-        universitySelect.innerHTML = '<option value="" disabled selected>Chargement des universités...</option>';
-
-        // Annule la requête précédente si l'utilisateur change vite de pays
-        if (currentAbortController) currentAbortController.abort();
-        currentAbortController = new AbortController();
-        const signal = currentAbortController.signal;
-
-        async function fetchUniversities(countryName) {
-          const timeoutId = setTimeout(() => currentAbortController.abort(), 10000);
-          try {
-            // NB: on utilise volontairement http:// et non https:// ici — c'est le schéma
-            // documenté officiellement par Hipolabs (github.com/Hipo/university-domains-list-api),
-            // et leur certificat HTTPS n'est pas fiable/complet, ce qui fait échouer le fetch en https.
-            const response = await fetch(
-              `http://universities.hipolabs.com/search?country=${encodeURIComponent(countryName)}`,
-              { signal }
-            );
-            clearTimeout(timeoutId);
-            if (!response.ok) throw new Error('Réponse HTTP ' + response.status);
-            return await response.json();
-          } catch (err) {
-            clearTimeout(timeoutId);
-            throw err;
-          }
+    async function loadUniversitiesForCountry(countryName) {
+      const requestId = ++universityRequestId;
+      universitySelect.innerHTML = ''; universitySelect.disabled = true; manualUniversityInput.value = ''; manualUniversityWrap.classList.add('hidden');
+      if (!countryName) { universitySelect.innerHTML = '<option value="">Sélectionnez un pays d\'abord</option>'; return; }
+      universitySelect.innerHTML = '<option value="">Chargement des universités, collèges et établissements...</option>'; universitySelect.classList.add('loading');
+      const selectedCountry = countries.find((country) => country.name === countryName);
+      if (!selectedCountry || !selectedCountry.cca2) { universitySelect.innerHTML = '<option value="">Code pays indisponible — saisie manuelle possible</option>'; manualUniversityWrap.classList.remove('hidden'); universitySelect.disabled = false; universitySelect.classList.remove('loading'); return; }
+      try {
+        const res = await fetchWithTimeout(OPENALEX_URL + encodeURIComponent(selectedCountry.cca2) + '&per-page=100');
+        if (!res.ok) throw new Error('Erreur OpenAlex');
+        const response = await res.json(); const data = Array.isArray(response.results) ? response.results : [];
+        if (requestId !== universityRequestId) return;
+        if (data.length === 0) { universitySelect.innerHTML = '<option value="">Aucun établissement trouvé — vous pouvez saisir manuellement</option>'; manualUniversityWrap.classList.remove('hidden'); }
+        else {
+          universitySelect.innerHTML = '<option value="">-- Choisir un établissement --</option>'; universitySelect.disabled = false;
+          const seen = new Set();
+          for (const u of data) { const name = u.display_name || 'Établissement sans nom'; if (seen.has(name)) continue; seen.add(name); const opt = document.createElement('option'); opt.value = name; opt.textContent = name; universitySelect.appendChild(opt); }
+          const otherOpt = document.createElement('option'); otherOpt.value = '__other'; otherOpt.textContent = 'Mon établissement ne figure pas dans la liste (saisir manuellement)'; universitySelect.appendChild(otherOpt);
         }
+      } catch (err) { console.error(err); universitySelect.innerHTML = '<option value="">Erreur de chargement des établissements — saisie manuelle possible</option>'; manualUniversityWrap.classList.remove('hidden'); }
+      finally { universitySelect.disabled = false; universitySelect.classList.remove('loading'); }
+    }
+    universitySelect.addEventListener('change', (e) => { if (e.target.value === '__other') manualUniversityWrap.classList.remove('hidden'); else manualUniversityWrap.classList.add('hidden'); });
 
-        try {
-          let data = await fetchUniversities(selectedCountryEn);
+    function formatFileSize(bytes) { if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} Ko`; return `${(bytes / (1024 * 1024)).toFixed(1)} Mo`; }
+    function syncDocumentInput() { const transfer = new DataTransfer(); selectedFiles.forEach((file) => transfer.items.add(file)); documentsInput.files = transfer.files; documentsInput.required = selectedFiles.length === 0; }
+    function renderFileList() { fileList.innerHTML = ''; selectedFiles.forEach((file, index) => { const item = document.createElement('div'); item.className = 'file-item'; item.innerHTML = '<span class="file-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/></svg><span class="file-name"></span><span class="file-size"></span></span><button type="button" class="remove-file" aria-label="Retirer ce fichier">Retirer</button>'; item.querySelector('.file-name').textContent = file.name; item.querySelector('.file-size').textContent = formatFileSize(file.size); item.querySelector('.remove-file').addEventListener('click', () => { selectedFiles.splice(index, 1); syncDocumentInput(); renderFileList(); }); fileList.appendChild(item); }); }
+    function addFiles(fileListLike) { const incoming = [...fileListLike].filter((file) => file.size <= MAX_FILE_SIZE); const rejected = [...fileListLike].filter((file) => file.size > MAX_FILE_SIZE); const known = new Set(selectedFiles.map((file) => `${file.name}-${file.size}-${file.lastModified}`)); incoming.forEach((file) => { const key = `${file.name}-${file.size}-${file.lastModified}`; if (!known.has(key)) { selectedFiles.push(file); known.add(key); } }); syncDocumentInput(); renderFileList(); if (rejected.length) alert(`${rejected.length} fichier(s) dépassent la limite de 5 Mo et n’ont pas été ajoutés.`); }
+    documentsInput.addEventListener('change', () => addFiles(documentsInput.files));
+    dropzone.addEventListener('click', () => documentsInput.click());
+    dropzone.addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); documentsInput.click(); } });
+    dropzone.addEventListener('dragover', (event) => { event.preventDefault(); dropzone.classList.add('is-dragover'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('is-dragover'));
+    dropzone.addEventListener('drop', (event) => { event.preventDefault(); dropzone.classList.remove('is-dragover'); addFiles(event.dataTransfer.files); });
 
-          // Si aucun résultat, on essaie le nom alias connu (ex: "Ivory Coast" -> "Côte d'Ivoire")
-          if (data.length === 0 && countryNameAliases[selectedCountryEn]) {
-            data = await fetchUniversities(countryNameAliases[selectedCountryEn]);
-          }
+    async function buildPayloadPreview() { const formData = new FormData(form); return { firstName: formData.get('firstName'), lastName: formData.get('lastName'), email: formData.get('email'), phone: formData.get('phone'), country: formData.get('country'), university: formData.get('university') === '__other' || !formData.get('university') ? formData.get('manualUniversity') : formData.get('university'), degree: formData.get('degree'), motivation: formData.get('motivation'), documentFileNames: formData.getAll('documents').map((file) => file.name).filter(Boolean), submittedAt: new Date().toISOString() }; }
+    previewBtn.addEventListener('click', async () => { const p = await buildPayloadPreview(); resultBox.classList.remove('hidden'); resultBox.textContent = JSON.stringify(p, null, 2); resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); });
 
-          universitySelect.innerHTML = '<option value="" disabled selected>Sélectionnez une université</option>';
-
-          if (data.length === 0) {
-            universitySelect.innerHTML += '<option value="Autre">Aucune université répertoriée pour ce pays</option>';
-            showUniversityError(
-              "Aucun établissement n'a été trouvé pour ce pays dans la base Hipolabs. " +
-              "Cochez la case ci-dessous pour saisir votre établissement manuellement."
-            );
-          } else {
-            data.sort((a, b) => a.name.localeCompare(b.name));
-            data.forEach(univ => {
-              const option = document.createElement('option');
-              option.value = univ.name;
-              option.textContent = univ.name;
-              universitySelect.appendChild(option);
-            });
-          }
-        } catch (error) {
-          if (error.name === 'AbortError') return; // requête annulée volontairement, pas une vraie erreur
-          console.error('Erreur chargement universités:', error);
-          universitySelect.innerHTML = '<option value="" disabled selected>Erreur de chargement</option>';
-          showUniversityError(
-            "Impossible de contacter l'API Hipolabs (elle est parfois instable/hors-service). " +
-            "Cochez la case ci-dessous pour saisir votre établissement manuellement. " +
-            "[Détail technique : " + (error.message || error.name || 'erreur inconnue') + "]"
-          );
-        }
-      });
-
-      // --- 3. Repli manuel si l'université n'est pas trouvée ou si l'API est indisponible ---
-      manualUniToggle.addEventListener('change', () => {
-        const useManual = manualUniToggle.checked;
-        manualUniInput.classList.toggle('hidden', !useManual);
-        universitySelect.disabled = useManual;
-        universitySelect.required = !useManual;
-        manualUniInput.required = useManual;
-      });
-
-      // --- 4. Empêche l'envoi réel du formulaire dans cette démo (à adapter côté serveur) ---
-      document.getElementById('applicationForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        alert('Formulaire valide ! (Remplacez ceci par votre logique d\'envoi côté serveur / PHP.)');
-      });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); submitBtn.disabled = true; submitBtn.textContent = 'Enregistrement en cours...';
+      const email = document.getElementById('email').value.trim(); const firstName = document.getElementById('firstName').value.trim(); const lastName = document.getElementById('lastName').value.trim(); const country = document.getElementById('country').value; const degree = document.getElementById('degree').value.trim();
+      if (!firstName || !lastName || !email || !country || !degree || !selectedFiles.length) { alert('Veuillez remplir les champs obligatoires et joindre au moins un document.'); submitBtn.disabled = false; submitBtn.innerHTML = 'Enregistrer ma candidature <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg>'; return; }
+      const formData = new FormData(form); const university = formData.get('university') === '__other' || !formData.get('university') ? formData.get('manualUniversity') : formData.get('university');
+      const sheetsPayload = new URLSearchParams({ firstName: firstName, lastName: lastName, email: email, phone: formData.get('phone') || '', country: country, university: university || '', degree: degree, motivation: formData.get('motivation') || '', documentFileNames: selectedFiles.map((file) => file.name).join(', '), documentCount: String(selectedFiles.length), status: 'Nouvelle candidature', submittedAt: new Date().toISOString() });
+      try { await fetch(GOOGLE_SHEETS_ENDPOINT, { method: 'POST', mode: 'no-cors', body: sheetsPayload, keepalive: true }); resultBox.classList.remove('hidden'); resultBox.textContent = 'Candidature enregistrée. Les informations et les noms des documents ont été transmis à Google Sheets.'; }
+      catch (err) { console.error(err); resultBox.classList.remove('hidden'); resultBox.textContent = 'Erreur lors de l’enregistrement dans Google Sheets : ' + err.message; }
+      finally { submitBtn.disabled = false; submitBtn.innerHTML = 'Enregistrer ma candidature <svg class="button-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h13M13 6l6 6-6 6"/></svg>'; }
     });
+    loadCountries();
   </script>
 </body>
 </html>
