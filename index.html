@@ -137,9 +137,6 @@
       const manualUniToggle    = document.getElementById('manualUniToggle');
       const manualUniInput     = document.getElementById('manualUniInput');
 
-      // Certains pays sont nommés différemment entre RestCountries (nom "common")
-      // et le jeu de données utilisé par l'API Hipolabs (university-domains-list).
-      // Cette table corrige les cas connus qui renvoient sinon une liste vide.
       const countryNameAliases = {
         "Ivory Coast": "Côte d'Ivoire",
         "Czechia": "Czech Republic",
@@ -163,269 +160,130 @@
         "United States": "United States of America"
       };
 
-      // Liste statique des pays (code ISO non nécessaire ici) : nom anglais utilisé pour
-      // interroger l'API Hipolabs, nom français pour l'affichage. Intégrée directement
-      // dans le code car RestCountries a fermé son ancienne API v3.1 (v5 exige désormais
-      // un compte + une clé API, inadapté à un appel direct depuis le navigateur), et parce
-      // que la liste des pays du monde change de toute façon très rarement.
       const COUNTRIES = [
-  {en:"Afghanistan",fr:"Afghanistan"},
-  {en:"South Africa",fr:"Afrique du Sud"},
-  {en:"Albania",fr:"Albanie"},
-  {en:"Algeria",fr:"Algérie"},
-  {en:"Germany",fr:"Allemagne"},
-  {en:"Andorra",fr:"Andorre"},
-  {en:"Angola",fr:"Angola"},
-  {en:"Anguilla",fr:"Anguilla"},
-  {en:"Antarctica",fr:"Antarctique"},
-  {en:"Antigua & Barbuda",fr:"Antigua-et-Barbuda"},
-  {en:"Saudi Arabia",fr:"Arabie saoudite"},
-  {en:"Argentina",fr:"Argentine"},
-  {en:"Armenia",fr:"Arménie"},
-  {en:"Aruba",fr:"Aruba"},
-  {en:"Australia",fr:"Australie"},
-  {en:"Austria",fr:"Autriche"},
-  {en:"Azerbaijan",fr:"Azerbaïdjan"},
-  {en:"Bahamas",fr:"Bahamas"},
-  {en:"Bahrain",fr:"Bahreïn"},
-  {en:"Bangladesh",fr:"Bangladesh"},
-  {en:"Barbados",fr:"Barbade"},
-  {en:"Belgium",fr:"Belgique"},
-  {en:"Belize",fr:"Belize"},
-  {en:"Bermuda",fr:"Bermudes"},
-  {en:"Bhutan",fr:"Bhoutan"},
-  {en:"Belarus",fr:"Biélorussie"},
-  {en:"Bolivia",fr:"Bolivie"},
-  {en:"Bosnia & Herzegovina",fr:"Bosnie-Herzégovine"},
-  {en:"Botswana",fr:"Botswana"},
-  {en:"Brunei",fr:"Brunei"},
-  {en:"Brazil",fr:"Brésil"},
-  {en:"Bulgaria",fr:"Bulgarie"},
-  {en:"Burkina Faso",fr:"Burkina Faso"},
-  {en:"Burundi",fr:"Burundi"},
-  {en:"Benin",fr:"Bénin"},
-  {en:"Cambodia",fr:"Cambodge"},
-  {en:"Cameroon",fr:"Cameroun"},
-  {en:"Canada",fr:"Canada"},
-  {en:"Cape Verde",fr:"Cap-Vert"},
-  {en:"Ceuta & Melilla",fr:"Ceuta et Melilla"},
-  {en:"Chile",fr:"Chili"},
-  {en:"China",fr:"Chine"},
-  {en:"Cyprus",fr:"Chypre"},
-  {en:"Colombia",fr:"Colombie"},
-  {en:"Comoros",fr:"Comores"},
-  {en:"Congo - Brazzaville",fr:"Congo-Brazzaville"},
-  {en:"Congo - Kinshasa",fr:"Congo-Kinshasa"},
-  {en:"North Korea",fr:"Corée du Nord"},
-  {en:"South Korea",fr:"Corée du Sud"},
-  {en:"Costa Rica",fr:"Costa Rica"},
-  {en:"Croatia",fr:"Croatie"},
-  {en:"Cuba",fr:"Cuba"},
-  {en:"Curaçao",fr:"Curaçao"},
-  {en:"Côte d’Ivoire",fr:"Côte d’Ivoire"},
-  {en:"Denmark",fr:"Danemark"},
-  {en:"Diego Garcia",fr:"Diego Garcia"},
-  {en:"Djibouti",fr:"Djibouti"},
-  {en:"Dominica",fr:"Dominique"},
-  {en:"Spain",fr:"Espagne"},
-  {en:"Estonia",fr:"Estonie"},
-  {en:"Eswatini",fr:"Eswatini"},
-  {en:"Fiji",fr:"Fidji"},
-  {en:"Finland",fr:"Finlande"},
-  {en:"France",fr:"France"},
-  {en:"Gabon",fr:"Gabon"},
-  {en:"Gambia",fr:"Gambie"},
-  {en:"Ghana",fr:"Ghana"},
-  {en:"Gibraltar",fr:"Gibraltar"},
-  {en:"Grenada",fr:"Grenade"},
-  {en:"Greenland",fr:"Groenland"},
-  {en:"Greece",fr:"Grèce"},
-  {en:"Guadeloupe",fr:"Guadeloupe"},
-  {en:"Guam",fr:"Guam"},
-  {en:"Guatemala",fr:"Guatemala"},
-  {en:"Guernsey",fr:"Guernesey"},
-  {en:"Guinea",fr:"Guinée"},
-  {en:"Equatorial Guinea",fr:"Guinée équatoriale"},
-  {en:"Guinea-Bissau",fr:"Guinée-Bissau"},
-  {en:"Guyana",fr:"Guyana"},
-  {en:"French Guiana",fr:"Guyane française"},
-  {en:"Georgia",fr:"Géorgie"},
-  {en:"South Georgia & South Sandwich Islands",fr:"Géorgie du Sud-et-les Îles Sandwich du Sud"},
-  {en:"Haiti",fr:"Haïti"},
-  {en:"Honduras",fr:"Honduras"},
-  {en:"Hungary",fr:"Hongrie"},
-  {en:"India",fr:"Inde"},
-  {en:"Indonesia",fr:"Indonésie"},
-  {en:"Iraq",fr:"Irak"},
-  {en:"Iran",fr:"Iran"},
-  {en:"Ireland",fr:"Irlande"},
-  {en:"Iceland",fr:"Islande"},
-  {en:"Israel",fr:"Israël"},
-  {en:"Italy",fr:"Italie"},
-  {en:"Jamaica",fr:"Jamaïque"},
-  {en:"Japan",fr:"Japon"},
-  {en:"Jersey",fr:"Jersey"},
-  {en:"Jordan",fr:"Jordanie"},
-  {en:"Kazakhstan",fr:"Kazakhstan"},
-  {en:"Kenya",fr:"Kenya"},
-  {en:"Kyrgyzstan",fr:"Kirghizstan"},
-  {en:"Kiribati",fr:"Kiribati"},
-  {en:"Kosovo",fr:"Kosovo"},
-  {en:"Kuwait",fr:"Koweït"},
-  {en:"Réunion",fr:"La Réunion"},
-  {en:"Laos",fr:"Laos"},
-  {en:"Lesotho",fr:"Lesotho"},
-  {en:"Latvia",fr:"Lettonie"},
-  {en:"Lebanon",fr:"Liban"},
-  {en:"Liberia",fr:"Liberia"},
-  {en:"Libya",fr:"Libye"},
-  {en:"Liechtenstein",fr:"Liechtenstein"},
-  {en:"Lithuania",fr:"Lituanie"},
-  {en:"Luxembourg",fr:"Luxembourg"},
-  {en:"North Macedonia",fr:"Macédoine du Nord"},
-  {en:"Madagascar",fr:"Madagascar"},
-  {en:"Malaysia",fr:"Malaisie"},
-  {en:"Malawi",fr:"Malawi"},
-  {en:"Maldives",fr:"Maldives"},
-  {en:"Mali",fr:"Mali"},
-  {en:"Malta",fr:"Malte"},
-  {en:"Morocco",fr:"Maroc"},
-  {en:"Martinique",fr:"Martinique"},
-  {en:"Mauritius",fr:"Maurice"},
-  {en:"Mauritania",fr:"Mauritanie"},
-  {en:"Mayotte",fr:"Mayotte"},
-  {en:"Mexico",fr:"Mexique"},
-  {en:"Micronesia",fr:"Micronésie"},
-  {en:"Moldova",fr:"Moldavie"},
-  {en:"Monaco",fr:"Monaco"},
-  {en:"Mongolia",fr:"Mongolie"},
-  {en:"Montserrat",fr:"Montserrat"},
-  {en:"Montenegro",fr:"Monténégro"},
-  {en:"Mozambique",fr:"Mozambique"},
-  {en:"Myanmar (Burma)",fr:"Myanmar (Birmanie)"},
-  {en:"Namibia",fr:"Namibie"},
-  {en:"Nauru",fr:"Nauru"},
-  {en:"Nicaragua",fr:"Nicaragua"},
-  {en:"Niger",fr:"Niger"},
-  {en:"Nigeria",fr:"Nigeria"},
-  {en:"Niue",fr:"Niue"},
-  {en:"Norway",fr:"Norvège"},
-  {en:"New Caledonia",fr:"Nouvelle-Calédonie"},
-  {en:"New Zealand",fr:"Nouvelle-Zélande"},
-  {en:"Nepal",fr:"Népal"},
-  {en:"Oman",fr:"Oman"},
-  {en:"Uganda",fr:"Ouganda"},
-  {en:"Uzbekistan",fr:"Ouzbékistan"},
-  {en:"Pakistan",fr:"Pakistan"},
-  {en:"Palau",fr:"Palaos"},
-  {en:"Panama",fr:"Panama"},
-  {en:"Papua New Guinea",fr:"Papouasie-Nouvelle-Guinée"},
-  {en:"Paraguay",fr:"Paraguay"},
-  {en:"Netherlands",fr:"Pays-Bas"},
-  {en:"Caribbean Netherlands",fr:"Pays-Bas caribéens"},
-  {en:"Philippines",fr:"Philippines"},
-  {en:"Poland",fr:"Pologne"},
-  {en:"French Polynesia",fr:"Polynésie française"},
-  {en:"Puerto Rico",fr:"Porto Rico"},
-  {en:"Portugal",fr:"Portugal"},
-  {en:"Peru",fr:"Pérou"},
-  {en:"Qatar",fr:"Qatar"},
-  {en:"Hong Kong SAR China",fr:"R.A.S. chinoise de Hong Kong"},
-  {en:"Macao SAR China",fr:"R.A.S. chinoise de Macao"},
-  {en:"Romania",fr:"Roumanie"},
-  {en:"United Kingdom",fr:"Royaume-Uni"},
-  {en:"Russia",fr:"Russie"},
-  {en:"Rwanda",fr:"Rwanda"},
-  {en:"Central African Republic",fr:"République centrafricaine"},
-  {en:"Dominican Republic",fr:"République dominicaine"},
-  {en:"Western Sahara",fr:"Sahara occidental"},
-  {en:"St. Barthélemy",fr:"Saint-Barthélemy"},
-  {en:"St. Kitts & Nevis",fr:"Saint-Christophe-et-Niévès"},
-  {en:"San Marino",fr:"Saint-Marin"},
-  {en:"St. Martin",fr:"Saint-Martin"},
-  {en:"Sint Maarten",fr:"Saint-Martin (partie néerlandaise)"},
-  {en:"St. Pierre & Miquelon",fr:"Saint-Pierre-et-Miquelon"},
-  {en:"St. Vincent & Grenadines",fr:"Saint-Vincent-et-les Grenadines"},
-  {en:"St. Helena",fr:"Sainte-Hélène"},
-  {en:"St. Lucia",fr:"Sainte-Lucie"},
-  {en:"El Salvador",fr:"Salvador"},
-  {en:"Samoa",fr:"Samoa"},
-  {en:"American Samoa",fr:"Samoa américaines"},
-  {en:"São Tomé & Príncipe",fr:"Sao Tomé-et-Principe"},
-  {en:"Sark",fr:"Sark"},
-  {en:"Serbia",fr:"Serbie"},
-  {en:"Seychelles",fr:"Seychelles"},
-  {en:"Sierra Leone",fr:"Sierra Leone"},
-  {en:"Singapore",fr:"Singapour"},
-  {en:"Slovakia",fr:"Slovaquie"},
-  {en:"Slovenia",fr:"Slovénie"},
-  {en:"Somalia",fr:"Somalie"},
-  {en:"Sudan",fr:"Soudan"},
-  {en:"South Sudan",fr:"Soudan du Sud"},
-  {en:"Sri Lanka",fr:"Sri Lanka"},
-  {en:"Switzerland",fr:"Suisse"},
-  {en:"Suriname",fr:"Suriname"},
-  {en:"Sweden",fr:"Suède"},
-  {en:"Svalbard & Jan Mayen",fr:"Svalbard et Jan Mayen"},
-  {en:"Syria",fr:"Syrie"},
-  {en:"Senegal",fr:"Sénégal"},
-  {en:"Tajikistan",fr:"Tadjikistan"},
-  {en:"Tanzania",fr:"Tanzanie"},
-  {en:"Taiwan",fr:"Taïwan"},
-  {en:"Chad",fr:"Tchad"},
-  {en:"Czechia",fr:"Tchéquie"},
-  {en:"French Southern Territories",fr:"Terres australes françaises"},
-  {en:"British Indian Ocean Territory",fr:"Territoire britannique de l’océan Indien"},
-  {en:"Palestinian Territories",fr:"Territoires palestiniens"},
-  {en:"Thailand",fr:"Thaïlande"},
-  {en:"Timor-Leste",fr:"Timor oriental"},
-  {en:"Togo",fr:"Togo"},
-  {en:"Tokelau",fr:"Tokelau"},
-  {en:"Tonga",fr:"Tonga"},
-  {en:"Trinidad & Tobago",fr:"Trinité-et-Tobago"},
-  {en:"Tristan da Cunha",fr:"Tristan da Cunha"},
-  {en:"Tunisia",fr:"Tunisie"},
-  {en:"Turkmenistan",fr:"Turkménistan"},
-  {en:"Türkiye",fr:"Turquie"},
-  {en:"Tuvalu",fr:"Tuvalu"},
-  {en:"Ukraine",fr:"Ukraine"},
-  {en:"Uruguay",fr:"Uruguay"},
-  {en:"Vanuatu",fr:"Vanuatu"},
-  {en:"Venezuela",fr:"Venezuela"},
-  {en:"Vietnam",fr:"Viêt Nam"},
-  {en:"Wallis & Futuna",fr:"Wallis-et-Futuna"},
-  {en:"Yemen",fr:"Yémen"},
-  {en:"Zambia",fr:"Zambie"},
-  {en:"Zimbabwe",fr:"Zimbabwe"},
-  {en:"Egypt",fr:"Égypte"},
-  {en:"United Arab Emirates",fr:"Émirats arabes unis"},
-  {en:"Ecuador",fr:"Équateur"},
-  {en:"Eritrea",fr:"Érythrée"},
-  {en:"Vatican City",fr:"État de la Cité du Vatican"},
-  {en:"United States",fr:"États-Unis"},
-  {en:"Ethiopia",fr:"Éthiopie"},
-  {en:"Bouvet Island",fr:"Île Bouvet"},
-  {en:"Christmas Island",fr:"Île Christmas"},
-  {en:"Clipperton Island",fr:"Île Clipperton"},
-  {en:"Norfolk Island",fr:"Île Norfolk"},
-  {en:"Isle of Man",fr:"Île de Man"},
-  {en:"Ascension Island",fr:"Île de l’Ascension"},
-  {en:"Canary Islands",fr:"Îles Canaries"},
-  {en:"Cayman Islands",fr:"Îles Caïmans"},
-  {en:"Cocos (Keeling) Islands",fr:"Îles Cocos"},
-  {en:"Cook Islands",fr:"Îles Cook"},
-  {en:"Faroe Islands",fr:"Îles Féroé"},
-  {en:"Heard & McDonald Islands",fr:"Îles Heard-et-MacDonald"},
-  {en:"Falkland Islands",fr:"Îles Malouines"},
-  {en:"Northern Mariana Islands",fr:"Îles Mariannes du Nord"},
-  {en:"Marshall Islands",fr:"Îles Marshall"},
-  {en:"Pitcairn Islands",fr:"Îles Pitcairn"},
-  {en:"Solomon Islands",fr:"Îles Salomon"},
-  {en:"Turks & Caicos Islands",fr:"Îles Turques-et-Caïques"},
-  {en:"British Virgin Islands",fr:"Îles Vierges britanniques"},
-  {en:"U.S. Virgin Islands",fr:"Îles Vierges des États-Unis"},
-  {en:"U.S. Outlying Islands",fr:"Îles mineures éloignées des États-Unis"},
-  {en:"Åland Islands",fr:"Îles Åland"}
+        {en:"Afghanistan",fr:"Afghanistan"},
+        {en:"South Africa",fr:"Afrique du Sud"},
+        {en:"Albania",fr:"Albanie"},
+        {en:"Algeria",fr:"Algérie"},
+        {en:"Germany",fr:"Allemagne"},
+        {en:"Andorra",fr:"Andorre"},
+        {en:"Angola",fr:"Angola"},
+        {en:"Anguilla",fr:"Anguilla"},
+        {en:"Antarctica",fr:"Antarctique"},
+        {en:"Antigua & Barbuda",fr:"Antigua-et-Barbuda"},
+        {en:"Saudi Arabia",fr:"Arabie saoudite"},
+        {en:"Argentina",fr:"Argentine"},
+        {en:"Armenia",fr:"Arménie"},
+        {en:"Aruba",fr:"Aruba"},
+        {en:"Australia",fr:"Australie"},
+        {en:"Austria",fr:"Autriche"},
+        {en:"Azerbaijan",fr:"Azerbaïdjan"},
+        {en:"Bahamas",fr:"Bahamas"},
+        {en:"Bahrain",fr:"Bahreïn"},
+        {en:"Bangladesh",fr:"Bangladesh"},
+        {en:"Barbados",fr:"Barbade"},
+        {en:"Belgium",fr:"Belgique"},
+        {en:"Belize",fr:"Belize"},
+        {en:"Bermuda",fr:"Bermudes"},
+        {en:"Bhutan",fr:"Bhoutan"},
+        {en:"Belarus",fr:"Biélorussie"},
+        {en:"Bolivia",fr:"Bolivie"},
+        {en:"Bosnia & Herzegovina",fr:"Bosnie-Herzégovine"},
+        {en:"Botswana",fr:"Botswana"},
+        {en:"Brunei",fr:"Brunei"},
+        {en:"Brazil",fr:"Brésil"},
+        {en:"Bulgaria",fr:"Bulgarie"},
+        {en:"Burkina Faso",fr:"Burkina Faso"},
+        {en:"Burundi",fr:"Burundi"},
+        {en:"Benin",fr:"Bénin"},
+        {en:"Cambodia",fr:"Cambodge"},
+        {en:"Cameroon",fr:"Cameroun"},
+        {en:"Canada",fr:"Canada"},
+        {en:"Cape Verde",fr:"Cap-Vert"},
+        {en:"Chile",fr:"Chili"},
+        {en:"China",fr:"Chine"},
+        {en:"Cyprus",fr:"Chypre"},
+        {en:"Colombia",fr:"Colombie"},
+        {en:"Comoros",fr:"Comores"},
+        {en:"Congo - Brazzaville",fr:"Congo-Brazzaville"},
+        {en:"Congo - Kinshasa",fr:"Congo-Kinshasa"},
+        {en:"North Korea",fr:"Corée du Nord"},
+        {en:"South Korea",fr:"Corée du Sud"},
+        {en:"Costa Rica",fr:"Costa Rica"},
+        {en:"Croatia",fr:"Croatie"},
+        {en:"Cuba",fr:"Cuba"},
+        {en:"Côte d’Ivoire",fr:"Côte d’Ivoire"},
+        {en:"Denmark",fr:"Danemark"},
+        {en:"Djibouti",fr:"Djibouti"},
+        {en:"Dominica",fr:"Dominique"},
+        {en:"Spain",fr:"Espagne"},
+        {en:"Estonia",fr:"Estonie"},
+        {en:"Eswatini",fr:"Eswatini"},
+        {en:"Fiji",fr:"Fidji"},
+        {en:"Finland",fr:"Finlande"},
+        {en:"France",fr:"France"},
+        {en:"Gabon",fr:"Gabon"},
+        {en:"Gambia",fr:"Gambie"},
+        {en:"Ghana",fr:"Ghana"},
+        {en:"Greece",fr:"Grèce"},
+        {en:"Guatemala",fr:"Guatemala"},
+        {en:"Guinea",fr:"Guinée"},
+        {en:"Equatorial Guinea",fr:"Guinée équatoriale"},
+        {en:"Haiti",fr:"Haïti"},
+        {en:"Honduras",fr:"Honduras"},
+        {en:"Hungary",fr:"Hongrie"},
+        {en:"India",fr:"Inde"},
+        {en:"Indonesia",fr:"Indonésie"},
+        {en:"Iraq",fr:"Irak"},
+        {en:"Iran",fr:"Iran"},
+        {en:"Ireland",fr:"Irlande"},
+        {en:"Iceland",fr:"Islande"},
+        {en:"Israel",fr:"Israël"},
+        {en:"Italy",fr:"Italie"},
+        {en:"Jamaica",fr:"Jamaïque"},
+        {en:"Japan",fr:"Japon"},
+        {en:"Jordan",fr:"Jordanie"},
+        {en:"Kazakhstan",fr:"Kazakhstan"},
+        {en:"Kenya",fr:"Kenya"},
+        {en:"Lebanon",fr:"Liban"},
+        {en:"Luxembourg",fr:"Luxembourg"},
+        {en:"Madagascar",fr:"Madagascar"},
+        {en:"Malaysia",fr:"Malaisie"},
+        {en:"Mali",fr:"Mali"},
+        {en:"Morocco",fr:"Maroc"},
+        {en:"Mexico",fr:"Mexique"},
+        {en:"Monaco",fr:"Monaco"},
+        {en:"Niger",fr:"Niger"},
+        {en:"Nigeria",fr:"Nigeria"},
+        {en:"Norway",fr:"Norvège"},
+        {en:"New Zealand",fr:"Nouvelle-Zélande"},
+        {en:"Uganda",fr:"Ouganda"},
+        {en:"Pakistan",fr:"Pakistan"},
+        {en:"Netherlands",fr:"Pays-Bas"},
+        {en:"Philippines",fr:"Philippines"},
+        {en:"Poland",fr:"Pologne"},
+        {en:"Portugal",fr:"Portugal"},
+        {en:"Peru",fr:"Pérou"},
+        {en:"Qatar",fr:"Qatar"},
+        {en:"Romania",fr:"Roumanie"},
+        {en:"United Kingdom",fr:"Royaume-Uni"},
+        {en:"Russia",fr:"Russie"},
+        {en:"Rwanda",fr:"Rwanda"},
+        {en:"Senegal",fr:"Sénégal"},
+        {en:"Somalia",fr:"Somalie"},
+        {en:"Sudan",fr:"Soudan"},
+        {en:"Sweden",fr:"Suède"},
+        {en:"Switzerland",fr:"Suisse"},
+        {en:"Tanzania",fr:"Tanzanie"},
+        {en:"Chad",fr:"Tchad"},
+        {en:"Togo",fr:"Togo"},
+        {en:"Tunisia",fr:"Tunisie"},
+        {en:"Türkiye",fr:"Turquie"},
+        {en:"Ukraine",fr:"Ukraine"},
+        {en:"Uruguay",fr:"Uruguay"},
+        {en:"United States",fr:"États-Unis"},
+        {en:"Zambia",fr:"Zambie"},
+        {en:"Zimbabwe",fr:"Zimbabwe"}
       ];
 
       let currentAbortController = null;
@@ -440,22 +298,14 @@
         universityErrorEl.classList.toggle('hidden', !message);
       }
 
-      // Enlève les accents pour comparer/rechercher plus largement si besoin
-      function normalize(str) {
-        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-      }
-
-      // --- 1. Remplir la liste des pays depuis le tableau statique COUNTRIES ---
-      // (aucun appel réseau nécessaire : instantané et ne dépend d'aucune API externe)
       countrySelect.innerHTML = '<option value="" disabled selected>Sélectionnez un pays</option>';
       COUNTRIES.forEach(country => {
         const option = document.createElement('option');
-        option.value = country.en; // nom anglais utilisé pour interroger Hipolabs
+        option.value = country.en;
         option.textContent = country.fr;
         countrySelect.appendChild(option);
       });
 
-      // --- 2. Charger les universités selon le pays sélectionné, avec repli sur alias ---
       countrySelect.addEventListener('change', async (e) => {
         const selectedCountryEn = e.target.value;
         showCountryError('');
@@ -464,7 +314,6 @@
         universitySelect.disabled = false;
         universitySelect.innerHTML = '<option value="" disabled selected>Chargement des universités...</option>';
 
-        // Annule la requête précédente si l'utilisateur change vite de pays
         if (currentAbortController) currentAbortController.abort();
         currentAbortController = new AbortController();
         const signal = currentAbortController.signal;
@@ -472,13 +321,16 @@
         async function fetchUniversities(countryName) {
           const timeoutId = setTimeout(() => currentAbortController.abort(), 10000);
           try {
-            // NB: on utilise volontairement http:// et non https:// ici — c'est le schéma
-            // documenté officiellement par Hipolabs (github.com/Hipo/university-domains-list-api),
-            // et leur certificat HTTPS n'est pas fiable/complet, ce qui fait échouer le fetch en https.
-            const response = await fetch(
-              `http://universities.hipolabs.com/search?country=${encodeURIComponent(countryName)}`,
-              { signal }
-            );
+            const httpsUrl = `https://universities.hipolabs.com/search?country=${encodeURIComponent(countryName)}`;
+            let response;
+            
+            try {
+              response = await fetch(httpsUrl, { signal });
+            } catch (e) {
+              const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(httpsUrl)}`;
+              response = await fetch(proxyUrl, { signal });
+            }
+
             clearTimeout(timeoutId);
             if (!response.ok) throw new Error('Réponse HTTP ' + response.status);
             return await response.json();
@@ -491,7 +343,6 @@
         try {
           let data = await fetchUniversities(selectedCountryEn);
 
-          // Si aucun résultat, on essaie le nom alias connu (ex: "Ivory Coast" -> "Côte d'Ivoire")
           if (data.length === 0 && countryNameAliases[selectedCountryEn]) {
             data = await fetchUniversities(countryNameAliases[selectedCountryEn]);
           }
@@ -501,7 +352,7 @@
           if (data.length === 0) {
             universitySelect.innerHTML += '<option value="Autre">Aucune université répertoriée pour ce pays</option>';
             showUniversityError(
-              "Aucun établissement n'a été trouvé pour ce pays dans la base Hipolabs. " +
+              "Aucun établissement n'a été trouvé pour ce pays dans la base. " +
               "Cochez la case ci-dessous pour saisir votre établissement manuellement."
             );
           } else {
@@ -514,18 +365,16 @@
             });
           }
         } catch (error) {
-          if (error.name === 'AbortError') return; // requête annulée volontairement, pas une vraie erreur
+          if (error.name === 'AbortError') return;
           console.error('Erreur chargement universités:', error);
           universitySelect.innerHTML = '<option value="" disabled selected>Erreur de chargement</option>';
           showUniversityError(
-            "Impossible de contacter l'API Hipolabs (elle est parfois instable/hors-service). " +
-            "Cochez la case ci-dessous pour saisir votre établissement manuellement. " +
-            "[Détail technique : " + (error.message || error.name || 'erreur inconnue') + "]"
+            "Impossible de contacter l'API d'universités. " +
+            "Cochez la case ci-dessous pour saisir votre établissement manuellement."
           );
         }
       });
 
-      // --- 3. Repli manuel si l'université n'est pas trouvée ou si l'API est indisponible ---
       manualUniToggle.addEventListener('change', () => {
         const useManual = manualUniToggle.checked;
         manualUniInput.classList.toggle('hidden', !useManual);
@@ -534,10 +383,9 @@
         manualUniInput.required = useManual;
       });
 
-      // --- 4. Empêche l'envoi réel du formulaire dans cette démo (à adapter côté serveur) ---
       document.getElementById('applicationForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        alert('Formulaire valide ! (Remplacez ceci par votre logique d\'envoi côté serveur / PHP.)');
+        alert('Formulaire valide !');
       });
     });
   </script>
